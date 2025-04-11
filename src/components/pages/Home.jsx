@@ -1,6 +1,12 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import FilterDropdown from "./FilterDropdown";
-import ProductModal from "./ProductModal";
+import ViewProductModal from "./ViewProductModal";
+import { useCart } from "../context/CartContext";
+import { useCheckoutCart } from "../context/CheckoutCartContext";
+import { useWishlist } from "../context/WishlistContext";
+import { Heart } from "lucide-react";
+
 function Home() {
   const [categories, setCategories] = useState([]);
   const [products, setProducts] = useState([]);
@@ -8,6 +14,10 @@ function Home() {
   const [selectedFilters, setSelectedFilters] = useState([]);
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
+  const { addToCart } = useCart();
+  const { setBuyProduct } = useCheckoutCart();
+  const { wishlistIds, handleWishlistToggle } = useWishlist();
+  const navigate = useNavigate();
 
   const categoryStyles = [
     { bg: "bg-gradient-to-r from-red-400 to-pink-500" },
@@ -58,50 +68,6 @@ function Home() {
     <div className="space-y-10 bg-gradient-to-br from-yellow-50 via-pink-50 to-purple-100 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900 min-h-screen">
       {/* Hero Section */}
       <section className="relative bg-gradient-to-r from-blue-500 to-green-500 dark:from-gray-800 dark:to-gray-900 text-white p-10 text-center rounded-md shadow-lg transition-colors duration-300 ">
-        {/* <div className="flex justify-start w-72 absolute top-4 left-4">
-          <div className="relative w-full ">
-            <button
-              onClick={() => setDropdownOpen(!dropdownOpen)}
-              className="bg-white text-black px-4 py-2 w-full rounded shadow border border-gray-300 text-left"
-            >
-              Filter by Category / Product
-            </button>
-
-            {dropdownOpen && (
-              <div className="absolute z-50 bg-white text-black mt-1 p-4 rounded shadow w-full border border-gray-300 max-h-48 overflow-auto text-left">
-                <strong className="block mb-1">Categories</strong>
-                {categories.map((cat) => (
-                  <label key={cat.id} className="block mb-1">
-                    <input
-                      type="checkbox"
-                      value={cat.id}
-                      checked={selectedFilters.includes(cat.id.toString())}
-                      onChange={() => toggleFilter(cat.id.toString())}
-                      className="mr-2"
-                    />
-                    {cat.name}
-                  </label>
-                ))}
-
-                <hr className="my-2" />
-
-                <strong className="block mb-1">Products</strong>
-                {products.map((prod) => (
-                  <label key={prod.id} className="block mb-1">
-                    <input
-                      type="checkbox"
-                      value={prod.id}
-                      checked={selectedFilters.includes(prod.id.toString())}
-                      onChange={() => toggleFilter(prod.id.toString())}
-                      className="mr-2"
-                    />
-                    {prod.name}
-                  </label>
-                ))}
-              </div>
-            )}
-          </div>
-        </div> */}
         <FilterDropdown
           categories={categories}
           products={products}
@@ -151,25 +117,37 @@ function Home() {
           {filteredProducts.map((product) => (
             <div
               key={product.id}
-              onClick={() => setSelectedProduct(product)} // 👈 Add this
-              className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg hover:shadow-2xl transition duration-300 cursor-pointer"
+              className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg hover:shadow-2xl transition duration-300"
             >
               <img
                 src={product.image_url}
                 alt={product.name}
-                className="h-40 w-full object-contain mx-auto rounded mb-4"
+                onClick={() => setSelectedProduct(product)}
+                className="h-40 w-full object-contain mx-auto rounded mb-4 hover:opacity-90 transition cursor-pointer"
               />
-              <h3 className="text-xl font-bold text-gray-800 dark:text-white">
-                {product.name}
-              </h3>
-              {/* 🔄 Price + Rating + Add to Cart in a row */}
+              <div className="flex  items-center justify-between">
+                <h3
+                  className="text-xl font-bold text-gray-800 dark:text-white hover:underline cursor-pointer"
+                  onClick={() => setSelectedProduct(product)}
+                >
+                  {product.name}
+                </h3>
+                <button
+                  className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black transition whitespace-nowrap"
+                  onClick={() => {
+                    setBuyProduct([{ ...product, quantity: 1 }]);
+                    navigate("/checkout");
+                  }}
+                >
+                  Buy
+                </button>
+              </div>
+
               <div className="flex items-center justify-between flex-wrap gap-2 mt-4">
-                {/* Price */}
                 <p className="text-green-600 dark:text-yellow-400 font-semibold">
                   ₹{product.price}
                 </p>
 
-                {/* Rating */}
                 <div className="flex items-center">
                   {[...Array(5)].map((_, i) => (
                     <span
@@ -188,18 +166,50 @@ function Home() {
                   </span>
                 </div>
 
-                {/* Add to Cart */}
-                <button className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black transition whitespace-nowrap">
+                <button
+                  title="Toggle Wishlist"
+                  onClick={() => handleWishlistToggle(product.id)}
+                  className="transition hover:scale-110 text-red-500 dark:text-yellow-500"
+                >
+                  <Heart
+                    fill={
+                      wishlistIds.includes(product.id) ? "currentColor" : "none"
+                    }
+                    className="w-6 h-6"
+                  />
+                </button>
+
+                <button
+                  className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black transition whitespace-nowrap"
+                  onClick={() => addToCart(product.id)}
+                >
                   Add to Cart
                 </button>
               </div>
             </div>
           ))}
         </div>
-        <ProductModal
-          product={selectedProduct}
-          onClose={() => setSelectedProduct(null)}
-        />
+
+        {selectedProduct && (
+          // <ViewProductModal
+          //   product={selectedProduct}
+          //   handleAddToCart={addToCart}
+          //   handleWishlistToggle={handleWishlistToggle}
+          //   wishlistIds={wishlistIds}
+          //   onClose={() => setSelectedProduct(null)}
+          //   isFromWishlist={false}
+          // />
+
+          <ViewProductModal
+            product={selectedProduct}
+            onClose={() => setSelectedProduct(null)}
+            buttonLabel="Add to Cart"
+            buttonAction={addToCart}
+            showWishlistButton={true}
+            wishlistAction={handleWishlistToggle}
+            wishlistIds={wishlistIds}
+          />
+        )}
       </section>
     </div>
   );

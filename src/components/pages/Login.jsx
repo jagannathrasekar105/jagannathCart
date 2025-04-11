@@ -1,16 +1,15 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-import { useWishlist } from "../context/WishlistContext";
+
 function Login() {
   const { login } = useAuth();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
-  const { fetchWishlist } = useWishlist();
+
   const validators = {
     email: (value) =>
       !value
@@ -47,25 +46,13 @@ function Login() {
 
     setErrors({});
 
-    const result = await login(formData.email, formData.password); // ✅ call your login API
+    const result = await login(formData.email, formData.password);
 
     if (result.error) {
-      toast.error(result.error, {
-        style: { background: "#ff4d4d", color: "#fff", marginTop: "60px" },
-      });
       return;
     }
 
-    const loggedInUser = JSON.parse(localStorage.getItem("user")); // ✅ user should be stored here
-
-    if (loggedInUser && loggedInUser.id) {
-      fetchWishlist(loggedInUser.id); // ✅ fetch wishlist after login
-    }
-
-    toast.success(`Login successful! Welcome back, ${loggedInUser.username}!`, {
-      position: "top-right",
-      style: { background: "#4CAF50", color: "#fff", marginTop: "60px" },
-    });
+    const loggedInUser = JSON.parse(localStorage.getItem("user"));
 
     navigate("/");
   };

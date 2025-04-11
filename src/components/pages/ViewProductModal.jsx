@@ -10,16 +10,18 @@ import {
   Percent,
 } from "lucide-react";
 
-const ProductModal = ({
+const ViewProductModal = ({
   product,
   onClose,
-  handleAddToCart,
-  handleWishlistToggle,
-  wishlistIds,
+  buttonLabel = "",
+  buttonAction = () => {},
+  showWishlistButton = false,
+  wishlistAction,
+  wishlistIds = [],
 }) => {
   if (!product) return null;
 
-  const isWishlisted = wishlistIds.includes(product.id);
+  const isWishlisted = wishlistIds?.includes?.(product.id);
   const inStock = product.stock_quantity > 0;
 
   return (
@@ -34,7 +36,7 @@ const ProductModal = ({
           />
         </div>
 
-        {/* Close Button (moved below image, inside content) */}
+        {/* Close Button */}
         <div className="flex justify-end px-5 pt-3">
           <button
             onClick={onClose}
@@ -50,20 +52,22 @@ const ProductModal = ({
           {/* Title and Wishlist */}
           <div className="flex justify-between items-center">
             <h2 className="text-xl font-bold">{product.name}</h2>
-            <button
-              onClick={() => handleWishlistToggle(product.id)}
-              className={`transition hover:scale-110 ${
-                isWishlisted
-                  ? "text-red-600 animate-pulse"
-                  : "text-gray-400 hover:text-pink-500"
-              }`}
-              title="Toggle Wishlist"
-            >
-              <Heart
-                className="w-6 h-6"
-                fill={isWishlisted ? "currentColor" : "none"}
-              />
-            </button>
+            {showWishlistButton && wishlistAction && (
+              <button
+                onClick={() => wishlistAction(product.id)}
+                className={`transition hover:scale-110 ${
+                  isWishlisted
+                    ? "text-red-600 animate-pulse"
+                    : "text-gray-400 hover:text-pink-500"
+                }`}
+                title="Toggle Wishlist"
+              >
+                <Heart
+                  className="w-6 h-6"
+                  fill={isWishlisted ? "currentColor" : "none"}
+                />
+              </button>
+            )}
           </div>
 
           {/* Price Section */}
@@ -122,22 +126,24 @@ const ProductModal = ({
             {product.description}
           </p>
 
-          {/* Add to Cart */}
-          <button
-            disabled={!inStock}
-            className={`w-full mt-4 py-2 rounded-lg text-white font-semibold text-md transition ${
-              inStock
-                ? "bg-green-600 hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black animate-bounce-slow"
-                : "bg-gray-400 cursor-not-allowed"
-            }`}
-            onClick={() => handleAddToCart(product.id, 1)}
-          >
-            Add to Cart
-          </button>
+          {/* Action Button */}
+          {buttonLabel && (
+            <button
+              disabled={!inStock}
+              className={`w-full mt-4 py-2 rounded-lg text-white font-semibold text-md transition ${
+                inStock
+                  ? "bg-green-600 hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black animate-bounce-slow"
+                  : "bg-gray-400 cursor-not-allowed"
+              }`}
+              onClick={() => buttonAction(product.id)}
+            >
+              {buttonLabel}
+            </button>
+          )}
         </div>
       </div>
     </div>
   );
 };
 
-export default ProductModal;
+export default ViewProductModal;

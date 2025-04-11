@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
-import toast from "react-hot-toast";
 import { Eye, EyeOff } from "lucide-react";
 
 function Register() {
@@ -92,15 +91,8 @@ function Register() {
     );
 
     if (result.error) {
-      toast.error(result.error, {
-        style: { background: "#ff4d4d", color: "#fff", marginTop: "60px" },
-      });
-      return;
+      return; // Optionally, you can set a general error state here
     }
-
-    toast.success("Registration successful! Please login.", {
-      style: { background: "#4CAF50", color: "#fff", marginTop: "60px" },
-    });
 
     navigate("/login");
   };

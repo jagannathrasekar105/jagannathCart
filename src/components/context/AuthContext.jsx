@@ -1,4 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { showSuccessToast, showErrorToast } from "../../utils/toastUtils"; // adjust path
 
 const AuthContext = createContext();
 
@@ -33,11 +34,14 @@ export function AuthProvider({ children }) {
       const data = await res.json();
 
       if (!res.ok) {
+        showErrorToast(data.error || data.message || "Registration failed");
         return { error: data.error || data.message || "Registration failed" };
       }
 
+      showSuccessToast("Registration successful! Please login.");
       return { success: true };
     } catch (err) {
+      showErrorToast(err.message || "Something went wrong");
       return { error: err.message || "Something went wrong" };
     }
   };
@@ -55,16 +59,20 @@ export function AuthProvider({ children }) {
       const data = await response.json();
 
       if (!response.ok) {
+        showErrorToast(data.error || "Login failed");
         return { error: data.error || "Login failed" };
       }
 
-      // ✅ Store user and token
       localStorage.setItem("user", JSON.stringify(data.user));
       localStorage.setItem("token", data.token);
       setUser(data.user);
 
+      showSuccessToast(
+        `Login successful! Welcome back, ${data.user.username}!`
+      );
       return { success: true };
     } catch (error) {
+      showErrorToast("Something went wrong during login");
       return { error: "Something went wrong during login" };
     }
   };
@@ -73,6 +81,8 @@ export function AuthProvider({ children }) {
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
+
+    showSuccessToast("Logged out successfully");
   };
 
   return (

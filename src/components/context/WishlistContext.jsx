@@ -1,20 +1,18 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { toast } from "react-hot-toast";
+import { useAuth } from "./AuthContext";
+import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
 
 const WishlistContext = createContext();
 
 export const WishlistProvider = ({ children }) => {
+  const { user } = useAuth();
   const [wishlist, setWishlist] = useState([]);
-  const [userId, setUserId] = useState(null);
+
+  const wishlistIds = wishlist?.map((item) => item.id) || [];
 
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user?.id) setUserId(user.id);
-  }, []);
-
-  useEffect(() => {
-    if (userId) fetchWishlist(userId);
-  }, [userId]);
+    if (user?.id) fetchWishlist(user.id);
+  }, [user]);
 
   const fetchWishlist = async (userId) => {
     try {
@@ -35,34 +33,28 @@ export const WishlistProvider = ({ children }) => {
       });
 
       const data = await res.json();
-      console.log("Wishlist Add Response:", data);
-
       if (data.success) {
-        // Ensure productId is in the wishlist
         setWishlist((prev) => {
-          if (
-            prev.find(
-              (item) => item.id === productId || item.product_id === productId
-            )
-          ) {
-            return prev;
-          }
-          return [...prev, { id: productId }];
+          const exists = prev.some(
+            (item) => item.id === productId || item.product_id === productId
+          );
+          return exists ? prev : [...prev, { id: productId }];
         });
 
-        toast.success("Added to wishlist");
+        showSuccessToast("Added to wishlist");
+
         return { success: true };
       } else {
-        toast.error(data.message || "Already in wishlist");
+        showErrorToast(data.message || "Already in wishlist");
         return { success: false };
       }
     } catch (error) {
-      toast.error("Something went wrong");
+      showErrorToast("Something went wrong");
       return { success: false };
     }
   };
 
-  const removeFromWishlist = async (userId, productId) => {
+  const removeFromWishlist = async (userId, productId, showToast = true) => {
     try {
       const res = await fetch(`http://localhost:5000/api/wishlist/remove`, {
         method: "POST",
@@ -73,16 +65,42 @@ export const WishlistProvider = ({ children }) => {
       const data = await res.json();
 
       if (data.success) {
-        setWishlist((prev) => prev.filter((item) => item.id !== productId));
-        toast.success("Removed from wishlist");
+        setWishlist((prev) =>
+          prev.filter(
+            (item) => item.id !== productId && item.product_id !== productId
+          )
+        );
+
+        if (showToast) {
+          showSuccessToast("Removed from wishlist");
+        }
+
         return { success: true };
       } else {
-        toast.error(data.message || "Failed to remove");
+        if (showToast) {
+          showErrorToast(data.message || "Failed to remove");
+        }
         return { success: false, message: data.message };
       }
     } catch (error) {
-      toast.error("Something went wrong");
-      return { success: false, message: "Something went wrong" };
+      if (showToast) {
+        showErrorToast("Something went wrong");
+      }
+      return { success: false };
+    }
+  };
+
+  const handleWishlistToggle = async (productId) => {
+    if (!user?.id) {
+      showErrorToast("Login to use wishlist");
+
+      return;
+    }
+
+    if (wishlistIds.includes(productId)) {
+      await removeFromWishlist(user.id, productId);
+    } else {
+      await addToWishlist(user.id, productId);
     }
   };
 
@@ -93,6 +111,8 @@ export const WishlistProvider = ({ children }) => {
         addToWishlist,
         removeFromWishlist,
         fetchWishlist,
+        handleWishlistToggle,
+        wishlistIds,
       }}
     >
       {children}

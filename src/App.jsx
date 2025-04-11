@@ -11,11 +11,16 @@ import Register from "./components/pages/Register";
 import WelcomePage from "./components/pages/Welcome";
 import Product from "./components/pages/Product";
 import ProtectedRoute from "./components/context/ProtectedRoute";
+import CheckoutPage from "./components/pages/CheckoutPage";
+import ConfirmAndPayPage from "./components/pages/ConfirmAndPayPage";
 import { AuthProvider, useAuth } from "./components/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import { useMemo, useEffect } from "react";
 import { ThemeProvider } from "./components/context/ThemeContext";
 import { CartProvider } from "./components/context/CartContext";
+import { CheckoutCartProvider } from "./components/context/CheckoutCartContext";
+import YourOrderPage from "./components/pages/YourOrderPage";
+import HistoryPage from "./components/pages/HistoryPage";
 import {
   WishlistProvider,
   useWishlist,
@@ -27,12 +32,20 @@ function App() {
       <ThemeProvider>
         <BrowserRouter>
           <CartProvider>
-            <WishlistProvider>
-              <WishlistInit />
-              <Navbar />
-              <Toaster position="top-right" reverseOrder={false} />
-              <MainRoutes />
-            </WishlistProvider>
+            <CheckoutCartProvider>
+              <WishlistProvider>
+                <WishlistInit />
+                <Navbar />
+                <Toaster
+                  position="top-right"
+                  reverseOrder={false}
+                  toastOptions={{
+                    duration: 1000,
+                  }}
+                />
+                <MainRoutes />
+              </WishlistProvider>
+            </CheckoutCartProvider>
           </CartProvider>
         </BrowserRouter>
       </ThemeProvider>
@@ -83,6 +96,7 @@ function MainRoutes() {
       <Route path="/contact" element={<Contact />} />
       <Route path="/login" element={<Login />} />
       <Route path="/register" element={<Register />} />
+
       <Route
         path="/product"
         element={
@@ -91,6 +105,10 @@ function MainRoutes() {
           </ProtectedRoute>
         }
       />
+      <Route path="/checkout" element={<CheckoutPage />} />
+      <Route path="/confirmAndPay" element={<ConfirmAndPayPage />} />
+      <Route path="/order" element={<YourOrderPage />} />
+      <Route path="/history" element={<HistoryPage />} />
     </Routes>
   );
 }

@@ -11,9 +11,8 @@ function Navbar() {
   const location = useLocation();
   const { user, logout } = useAuth();
   const { cartItems } = useCart();
-  const { wishlist, fetchWishlist } = useWishlist();
+  const { wishlist } = useWishlist();
   // console.log(wishlist);
-  // console.log(Object.keys(wishlist).length);
   const handleCartClick = () => {
     if (!user) {
       navigate("/login");

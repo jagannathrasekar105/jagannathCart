@@ -1,36 +1,75 @@
-import React from "react";
-import toast from "react-hot-toast";
+import React, { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { useCart } from "../context/CartContext";
-import { Link } from "react-router-dom";
+import { useCheckoutCart } from "../context/CheckoutCartContext";
+import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
+import ViewProductModal from "./ViewProductModal";
+import { showErrorToast } from "../../utils/toastUtils";
 
 export default function Cart() {
+  const navigate = useNavigate();
   const { cartItems, removeFromCart, updateCartQuantity } = useCart();
-  const userId = JSON.parse(localStorage.getItem("user"))?.id;
+  const { setBuyProduct } = useCheckoutCart();
+  const [selectedProduct, setSelectedProduct] = useState(null);
+  const [selectedItems, setSelectedItems] = useState([]);
 
   const handleQuantityChange = async (index, change) => {
-    const updatedItem = cartItems[index];
-    const newQty = updatedItem.quantity + change;
-
-    if (newQty < 1) return;
-
-    await updateCartQuantity(userId, updatedItem.id, newQty);
-    toast.success("Cart updated");
+    const item = cartItems[index];
+    const newQty = item.quantity + change;
+    if (newQty >= 1) await updateCartQuantity(item.id, newQty);
   };
+  const handleRemove = async (productId) => {
+    await removeFromCart(productId);
+    setSelectedItems((prev) => prev.filter((id) => id !== productId));
+  };
+
+  const handleSelectItem = (itemId) => {
+    setSelectedItems((prev) =>
+      prev.includes(itemId)
+        ? prev.filter((id) => id !== itemId)
+        : [...prev, itemId]
+    );
+  };
+
+  const handleSelectAll = () => {
+    setSelectedItems(
+      selectedItems.length === cartItems.length
+        ? []
+        : cartItems.map((item) => item.id)
+    );
+  };
+
+  const handleMultiProductCheckout = () => {
+    const selectedProducts = cartItems.filter((item) =>
+      selectedItems.includes(item.id)
+    );
+    if (!selectedProducts.length)
+      return showErrorToast("🛍️ Select at least one item to continue.");
+    setBuyProduct(selectedProducts);
+    navigate("/checkout");
+  };
+
+  const getTotalPrice = () =>
+    cartItems
+      .reduce(
+        (sum, item) => sum + Number(item.final_price || 0) * item.quantity,
+        0
+      )
+      .toFixed(2);
 
   return (
     <motion.div
       initial={{ opacity: 0, y: 30 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="min-h-screen bg-gradient-to-br from-pink-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 px-6 py-6"
+      className="min-h-screen bg-gradient-to-br from-pink-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800"
     >
       <motion.h1
         initial={{ opacity: 0, scale: 0.95 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ delay: 0.2, duration: 0.4 }}
-        className="text-4xl font-bold text-center text-pink-700 dark:text-yellow-300 mb-8"
+        className="text-4xl font-bold text-center text-pink-700 dark:text-yellow-300 p-4"
       >
         🛒 Your Cart
       </motion.h1>
@@ -43,10 +82,10 @@ export default function Cart() {
       >
         {cartItems.length === 0 ? (
           <motion.div
-            className="text-center py-16"
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.4, duration: 0.5 }}
+            className="text-center py-16"
           >
             <h2 className="text-3xl font-bold text-pink-600 dark:text-yellow-300 mb-4">
               🛍️ Your cart is feeling a little empty!
@@ -63,17 +102,38 @@ export default function Cart() {
           </motion.div>
         ) : (
           <>
-            {/* Scrollable Product List */}
-            <div className="max-h-80 overflow-y-auto pr-2 space-y-4">
+            <div className="flex items-center justify-end mb-2">
+              <label className="flex items-center gap-2 text-sm text-gray-700 dark:text-gray-200">
+                <input
+                  type="checkbox"
+                  checked={selectedItems.length === cartItems.length}
+                  onChange={handleSelectAll}
+                  className="accent-pink-500 dark:accent-yellow-400"
+                />
+                Select All
+              </label>
+            </div>
+
+            <div className="max-h-80 overflow-y-auto pr-4 space-y-2 scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-pink-100 dark:scrollbar-thumb-yellow-400 dark:scrollbar-track-gray-700">
               {cartItems.map((item, index) => (
                 <motion.div
-                  key={item.cartItemId}
+                  key={item.cartItemId || item.id}
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
-                  transition={{ delay: index * 0.1, duration: 0.4 }}
-                  className="flex items-center justify-between border-b border-gray-200 dark:border-gray-600 py-2"
+                  transition={{ delay: index * 0.05, duration: 0.3 }}
+                  className="flex justify-between items-center border-b border-gray-200 dark:border-gray-600 py-4"
                 >
-                  <div className="flex gap-4 items-center">
+                  <input
+                    type="checkbox"
+                    checked={selectedItems.includes(item.id)}
+                    onChange={() => handleSelectItem(item.id)}
+                    className="accent-pink-500 dark:accent-yellow-400 mr-4"
+                  />
+
+                  <div
+                    className="flex items-center gap-4 flex-1 cursor-pointer"
+                    onClick={() => setSelectedProduct(item)}
+                  >
                     <img
                       src={item.image_url}
                       alt={item.name}
@@ -89,10 +149,9 @@ export default function Cart() {
                     </div>
                   </div>
 
-                  {/* Quantity Control */}
-                  <div className="flex items-center justify-center gap-4">
+                  <div className="flex items-center justify-center gap-4 flex-1">
                     <button
-                      title="Decrease"
+                      title="Decrease quantity"
                       className={`text-2xl font-bold ${
                         item.quantity === 1
                           ? "text-gray-400 cursor-not-allowed"
@@ -103,13 +162,11 @@ export default function Cart() {
                     >
                       <Minus size={20} />
                     </button>
-
-                    <span className="text-lg font-bold text-gray-800 dark:text-white transition-all duration-300 ease-in-out">
+                    <span className="text-lg font-bold text-gray-800 dark:text-white">
                       {item.quantity}
                     </span>
-
                     <button
-                      title="Increase"
+                      title="Increase quantity"
                       className="text-2xl font-bold text-pink-600 dark:text-yellow-400 hover:scale-110 transition"
                       onClick={() => handleQuantityChange(index, 1)}
                     >
@@ -117,17 +174,13 @@ export default function Cart() {
                     </button>
                   </div>
 
-                  {/* Total & Remove */}
-                  <div className="text-right">
-                    <p className="text-md font-semibold text-green-600 dark:text-yellow-300">
-                      Total: ₹{(item.final_price * item.quantity).toFixed(2)}
+                  <div className="flex flex-col items-end gap-2 flex-1 text-right">
+                    <p className="text-sm font-semibold text-green-600 dark:text-yellow-300">
+                      ₹{(item.final_price * item.quantity).toFixed(2)}
                     </p>
                     <button
-                      className="text-red-500 dark:text-red-400 hover:underline"
-                      onClick={async () => {
-                        await removeFromCart(userId, item.id);
-                        toast.success("Item removed from cart");
-                      }}
+                      className="text-sm text-red-500 dark:text-red-400 hover:underline"
+                      onClick={() => handleRemove(item.id)}
                     >
                       Remove
                     </button>
@@ -136,23 +189,31 @@ export default function Cart() {
               ))}
             </div>
 
-            {/* Final Total & Checkout */}
+            {selectedProduct && (
+              <ViewProductModal
+                product={selectedProduct}
+                onClose={() => setSelectedProduct(null)}
+                buttonLabel="Buy"
+                buttonAction={() => {
+                  setBuyProduct([selectedProduct]);
+                  navigate("/checkout");
+                }}
+              />
+            )}
+
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.2 }}
-              className="text-right mt-6"
+              className="text-right mt-2"
             >
               <h2 className="text-xl font-bold text-gray-800 dark:text-white">
-                Grand Total: ₹
-                {cartItems
-                  .reduce(
-                    (sum, item) => sum + item.final_price * item.quantity,
-                    0
-                  )
-                  .toFixed(2)}
+                Grand Total: ₹{getTotalPrice()}
               </h2>
-              <button className="mt-4 bg-pink-600 dark:bg-yellow-500 dark:text-black text-white px-6 py-2 rounded hover:bg-pink-700 dark:hover:bg-yellow-400 transition">
+              <button
+                onClick={handleMultiProductCheckout}
+                className="mt-2 bg-pink-600 dark:bg-yellow-500 dark:text-black text-white px-6 py-2 rounded hover:bg-pink-700 dark:hover:bg-yellow-400 transition"
+              >
                 Proceed to Checkout
               </button>
             </motion.div>
