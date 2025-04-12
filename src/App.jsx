@@ -21,6 +21,7 @@ import { CartProvider } from "./components/context/CartContext";
 import { CheckoutCartProvider } from "./components/context/CheckoutCartContext";
 import YourOrderPage from "./components/pages/YourOrderPage";
 import HistoryPage from "./components/pages/HistoryPage";
+import OrderSuccessPage from "./components/pages/OrderSuccessPage";
 import {
   WishlistProvider,
   useWishlist,
@@ -109,6 +110,7 @@ function MainRoutes() {
       <Route path="/confirmAndPay" element={<ConfirmAndPayPage />} />
       <Route path="/order" element={<YourOrderPage />} />
       <Route path="/history" element={<HistoryPage />} />
+      <Route path="/order-success" element={<OrderSuccessPage />} />
     </Routes>
   );
 }

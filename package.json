@@ -10,13 +10,17 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@headlessui/react": "^2.2.1",
+    "@react-hook/window-size": "^3.1.1",
     "framer-motion": "^12.6.3",
     "lucide-react": "^0.487.0",
     "react": "^19.1.0",
+    "react-confetti": "^6.4.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
     "react-router-dom": "^6.30.0",
     "react-select": "^5.10.1",
+    "react-spring": "^6.0.0",
     "swiper": "^11.2.6",
     "tailwind-scrollbar": "^3.0.1"
   },

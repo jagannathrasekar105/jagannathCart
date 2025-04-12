@@ -1,9 +1,10 @@
 import React, { useState, useMemo } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { X, Plus, Minus } from "lucide-react";
 import RemoveProductModal from "./RemoveProductModal";
 import { useCheckoutCart } from "../context/CheckoutCartContext";
 import { useAuth } from "../context/AuthContext";
+import OrderSuccessPage from "./OrderSuccessPage";
 
 const shippingFields = ["name", "mobile", "address", "city", "pincode"];
 const paymentOptions = [
@@ -99,7 +100,9 @@ export default function ConfirmAndPayPage() {
 
       if (res.ok) {
         // alert("✅ Order placed successfully!");
-        navigate("/order");
+        // setBuyProduct([]); // Clear cart
+        console.log(orderData);
+        navigate("/order-success", { state: { orderData } });
       } else {
         console.error(result);
         alert("❌ Failed to place order. Try again.");
