@@ -72,7 +72,7 @@ export const WishlistProvider = ({ children }) => {
         );
 
         if (showToast) {
-          showSuccessToast("Removed from wishlist");
+          showErrorToast("Removed from wishlist");
         }
 
         return { success: true };

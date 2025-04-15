@@ -22,6 +22,7 @@ import { CheckoutCartProvider } from "./components/context/CheckoutCartContext";
 import YourOrderPage from "./components/pages/YourOrderPage";
 import HistoryPage from "./components/pages/HistoryPage";
 import OrderSuccessPage from "./components/pages/OrderSuccessPage";
+import ProfilePage from "./components/pages/ProfilePage";
 import {
   WishlistProvider,
   useWishlist,
@@ -41,7 +42,7 @@ function App() {
                   position="top-right"
                   reverseOrder={false}
                   toastOptions={{
-                    duration: 1000,
+                    duration: 1300,
                   }}
                 />
                 <MainRoutes />
@@ -111,6 +112,7 @@ function MainRoutes() {
       <Route path="/order" element={<YourOrderPage />} />
       <Route path="/history" element={<HistoryPage />} />
       <Route path="/order-success" element={<OrderSuccessPage />} />
+      <Route path="/profile" element={<ProfilePage />} />
     </Routes>
   );
 }

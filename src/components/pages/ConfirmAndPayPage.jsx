@@ -5,6 +5,7 @@ import RemoveProductModal from "./RemoveProductModal";
 import { useCheckoutCart } from "../context/CheckoutCartContext";
 import { useAuth } from "../context/AuthContext";
 import OrderSuccessPage from "./OrderSuccessPage";
+import { showErrorToast } from "../../utils/toastUtils";
 
 const shippingFields = ["name", "mobile", "address", "city", "pincode"];
 const paymentOptions = [
@@ -66,11 +67,11 @@ export default function ConfirmAndPayPage() {
     const { name, address, city, pincode, mobile, payment, agree } = form;
 
     if (!name || !address || !city || !pincode || !mobile) {
-      return alert("⚠️ Please fill in all shipping fields.");
+      return showErrorToast("⚠️ Please fill in all shipping fields.");
     }
 
     if (!agree) {
-      return alert("⚠️ Please agree to the terms and conditions.");
+      return showErrorToast("⚠️ Please agree to the terms and conditions.");
     }
 
     const orderData = {

@@ -246,7 +246,9 @@ CREATE TABLE cart_items (
   UNIQUE KEY unique_user_product (user_id, product_id)
 );
 
-
+UPDATE users SET profilePic = NULL WHERE id = 6;
 
 SELECT * FROM products WHERE id = 8;
+ALTER TABLE users ADD COLUMN profilePic LONGBLOB;
 
+ALTER TABLE users MODIFY COLUMN profilePic LONGTEXT;

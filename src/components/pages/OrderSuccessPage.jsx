@@ -199,7 +199,7 @@ const OrderSuccessPage = () => {
               Items
             </h2>
 
-            <ul className="space-y-4">
+            <ul className="space-y-4  max-h-[420px] overflow-y-auto scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-pink-100 dark:scrollbar-thumb-yellow-400 dark:scrollbar-track-gray-700">
               {orderData.items.map((item, index) => {
                 const price = parseFloat(item.price);
                 const totalPrice = (price * item.quantity).toFixed(2);

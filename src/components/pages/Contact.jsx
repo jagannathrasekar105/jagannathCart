@@ -2,8 +2,8 @@ import React from "react";
 
 function Contact() {
   return (
-    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-pink-100 dark:from-gray-800 dark:to-gray-900 px-6 py-16 flex items-center justify-center">
-      <div className="w-full max-w-3xl text-center space-y-10 transition-all duration-300">
+    <div className="min-h-screen bg-gradient-to-br from-yellow-100 to-pink-100 dark:from-gray-800 dark:to-gray-900 flex items-center justify-center px-4 py-10">
+      <div className="w-full max-w-3xl text-center space-y-10">
         <h1 className="text-4xl font-extrabold text-pink-700 dark:text-yellow-300 drop-shadow">
           Contact Us
         </h1>

@@ -3,7 +3,7 @@ import { toast } from "react-hot-toast";
 
 const defaultOptions = {
   style: {
-    marginTop: "60px",
+    marginTop: "75px",
     color: "#fff",
   },
   position: "top-right",

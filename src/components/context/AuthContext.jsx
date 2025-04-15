@@ -6,6 +6,7 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [fileInputKey, setFileInputKey] = useState(Date.now());
 
   useEffect(() => {
     const storedUser = localStorage.getItem("user");
@@ -85,8 +86,72 @@ export function AuthProvider({ children }) {
     showSuccessToast("Logged out successfully");
   };
 
+  const updateUserProfile = async (file) => {
+    try {
+      const formData = new FormData();
+      formData.append("profilePic", file);
+
+      const response = await fetch(
+        "http://localhost:5000/api/auth/upload-profile-pic",
+        {
+          method: "POST",
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+          body: formData,
+        }
+      );
+
+      if (!response.ok) throw new Error("Profile picture upload failed");
+
+      const data = await response.json();
+      const updatedUser = { ...user, profilePic: data.base64Image };
+
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      showSuccessToast(data.message);
+      setFileInputKey(Date.now());
+    } catch (error) {
+      console.error(error);
+      showErrorToast("Failed to update profile picture");
+    }
+  };
+  const removeUserProfile = async () => {
+    try {
+      const response = await fetch(
+        "http://localhost:5000/api/auth/reomve-profile-pic",
+        {
+          method: "DELETE",
+          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
+        }
+      );
+
+      if (!response.ok) throw new Error("Failed to remove profile picture");
+
+      const data = await response.json();
+      const updatedUser = { ...user, profilePic: null };
+
+      setUser(updatedUser);
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      showSuccessToast(data.message);
+      setFileInputKey(Date.now());
+    } catch (error) {
+      console.error(error);
+      showErrorToast("Failed to remove profile picture");
+    }
+  };
+
   return (
-    <AuthContext.Provider value={{ user, register, login, logout, loading }}>
+    <AuthContext.Provider
+      value={{
+        user,
+        register,
+        login,
+        logout,
+        loading,
+        setUser,
+        updateUserProfile,
+        removeUserProfile,
+      }}
+    >
       {children}
     </AuthContext.Provider>
   );
