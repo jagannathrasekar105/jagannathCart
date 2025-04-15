@@ -146,7 +146,7 @@ CREATE TABLE orders (
 show tables;-- 
 SELECT * 
 FROM orders 
-WHERE user_id = 5
+WHERE user_id = 28
 ORDER BY order_date DESC;
 select * from orders;
 DESCRIBE orders;
@@ -158,7 +158,7 @@ ALTER TABLE products
 DROP COLUMN quantity;
 SELECT * FROM products WHERE id IN (10, 12);
 select * from users;
-SELECT * FROM users WHERE id = 19;
+SELECT * FROM users WHERE id = 28;
 ALTER TABLE orders 
 ADD COLUMN name VARCHAR(100),
 ADD COLUMN mobile VARCHAR(15),
@@ -252,3 +252,7 @@ SELECT * FROM products WHERE id = 8;
 ALTER TABLE users ADD COLUMN profilePic LONGBLOB;
 
 ALTER TABLE users MODIFY COLUMN profilePic LONGTEXT;
+
+
+SELECT * FROM USERS as u inner join orders as o on u.id=o.user_id inner join order_items as oi on o.id=oi.order_id inner join products as p on oi.product_id=p.id where u.id=28;
+show databases;
