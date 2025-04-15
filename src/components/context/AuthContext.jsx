@@ -1,5 +1,11 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { showSuccessToast, showErrorToast } from "../../utils/toastUtils"; // adjust path
+import {
+  registerUser,
+  loginUser,
+  uploadProfilePicture,
+  removeProfilePicture,
+} from "../API/AuthApi";
+import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
 
 const AuthContext = createContext();
 
@@ -18,23 +24,15 @@ export function AuthProvider({ children }) {
 
   const register = async (firstName, lastName, email, username, password) => {
     try {
-      const res = await fetch("http://localhost:5000/api/auth/register", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          firstName,
-          lastName,
-          email,
-          username,
-          password,
-        }),
+      const { ok, data } = await registerUser({
+        firstName,
+        lastName,
+        email,
+        username,
+        password,
       });
 
-      const data = await res.json();
-
-      if (!res.ok) {
+      if (!ok) {
         showErrorToast(data.error || data.message || "Registration failed");
         return { error: data.error || data.message || "Registration failed" };
       }
@@ -49,17 +47,9 @@ export function AuthProvider({ children }) {
 
   const login = async (email, password) => {
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ email, password }),
-      });
+      const { ok, data } = await loginUser(email, password);
 
-      const data = await response.json();
-
-      if (!response.ok) {
+      if (!ok) {
         showErrorToast(data.error || "Login failed");
         return { error: data.error || "Login failed" };
       }
@@ -82,29 +72,17 @@ export function AuthProvider({ children }) {
     setUser(null);
     localStorage.removeItem("user");
     localStorage.removeItem("token");
-
     showSuccessToast("Logged out successfully");
   };
 
   const updateUserProfile = async (file) => {
     try {
-      const formData = new FormData();
-      formData.append("profilePic", file);
+      const token = localStorage.getItem("token");
+      const { ok, data } = await uploadProfilePicture(file, token);
 
-      const response = await fetch(
-        "http://localhost:5000/api/auth/upload-profile-pic",
-        {
-          method: "POST",
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-          body: formData,
-        }
-      );
+      if (!ok) throw new Error("Profile picture upload failed");
 
-      if (!response.ok) throw new Error("Profile picture upload failed");
-
-      const data = await response.json();
       const updatedUser = { ...user, profilePic: data.base64Image };
-
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
       showSuccessToast(data.message);
@@ -114,21 +92,15 @@ export function AuthProvider({ children }) {
       showErrorToast("Failed to update profile picture");
     }
   };
+
   const removeUserProfile = async () => {
     try {
-      const response = await fetch(
-        "http://localhost:5000/api/auth/reomve-profile-pic",
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
-      );
+      const token = localStorage.getItem("token");
+      const { ok, data } = await removeProfilePicture(token);
 
-      if (!response.ok) throw new Error("Failed to remove profile picture");
+      if (!ok) throw new Error("Failed to remove profile picture");
 
-      const data = await response.json();
       const updatedUser = { ...user, profilePic: null };
-
       setUser(updatedUser);
       localStorage.setItem("user", JSON.stringify(updatedUser));
       showSuccessToast(data.message);

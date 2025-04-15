@@ -6,6 +6,7 @@ import { useCheckoutCart } from "../context/CheckoutCartContext";
 import { useWishlist } from "../context/WishlistContext";
 import ViewProductModal from "./ViewProductModal";
 import { Heart } from "lucide-react";
+import { fetchTopSellingProducts } from "../API/ProductApi";
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -13,13 +14,15 @@ function Products() {
   const { addToCart } = useCart();
   const { setBuyProduct } = useCheckoutCart();
   const { wishlistIds, handleWishlistToggle } = useWishlist();
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/products/top-selling")
-      .then((res) => res.json())
-      .then(setProducts)
-      .catch((err) => console.error("Error fetching products:", err));
+    const getProducts = async () => {
+      const data = await fetchTopSellingProducts();
+      setProducts(data);
+    };
+    getProducts();
   }, []);
 
   return (

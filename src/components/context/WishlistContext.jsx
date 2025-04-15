@@ -1,5 +1,10 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { useAuth } from "./AuthContext";
+import {
+  fetchWishlistAPI,
+  addToWishlistAPI,
+  removeFromWishlistAPI,
+} from "../API/WishlistApi";
 import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
 
 const WishlistContext = createContext();
@@ -16,8 +21,7 @@ export const WishlistProvider = ({ children }) => {
 
   const fetchWishlist = async (userId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/wishlist/${userId}`);
-      const data = await res.json();
+      const data = await fetchWishlistAPI(userId);
       setWishlist(data || []);
     } catch (error) {
       console.error("Failed to fetch wishlist:", error);
@@ -26,13 +30,8 @@ export const WishlistProvider = ({ children }) => {
 
   const addToWishlist = async (userId, productId) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/wishlist/add`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, productId }),
-      });
+      const data = await addToWishlistAPI(userId, productId);
 
-      const data = await res.json();
       if (data.success) {
         setWishlist((prev) => {
           const exists = prev.some(
@@ -42,7 +41,6 @@ export const WishlistProvider = ({ children }) => {
         });
 
         showSuccessToast("Added to wishlist");
-
         return { success: true };
       } else {
         showErrorToast(data.message || "Already in wishlist");
@@ -56,13 +54,7 @@ export const WishlistProvider = ({ children }) => {
 
   const removeFromWishlist = async (userId, productId, showToast = true) => {
     try {
-      const res = await fetch(`http://localhost:5000/api/wishlist/remove`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ userId, productId }),
-      });
-
-      const data = await res.json();
+      const data = await removeFromWishlistAPI(userId, productId);
 
       if (data.success) {
         setWishlist((prev) =>
@@ -93,7 +85,6 @@ export const WishlistProvider = ({ children }) => {
   const handleWishlistToggle = async (productId) => {
     if (!user?.id) {
       showErrorToast("Login to use wishlist");
-
       return;
     }
 

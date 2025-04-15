@@ -6,6 +6,7 @@ import { useCheckoutCart } from "../context/CheckoutCartContext";
 import { useAuth } from "../context/AuthContext";
 import OrderSuccessPage from "./OrderSuccessPage";
 import { showErrorToast } from "../../utils/toastUtils";
+import { placeOrder } from "../API/OrderApi";
 
 const shippingFields = ["name", "mobile", "address", "city", "pincode"];
 const paymentOptions = [
@@ -91,25 +92,9 @@ export default function ConfirmAndPayPage() {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/orders", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderData),
-      });
-
-      const result = await res.json();
-
-      if (res.ok) {
-        // alert("✅ Order placed successfully!");
-        // setBuyProduct([]); // Clear cart
-        console.log(orderData);
-        navigate("/order-success", { state: { orderData } });
-      } else {
-        console.error(result);
-        alert("❌ Failed to place order. Try again.");
-      }
+      const result = await placeOrder(orderData);
+      navigate("/order-success", { state: { orderData } });
     } catch (err) {
-      console.error(err);
       alert("❌ Something went wrong while placing your order.");
     }
   };

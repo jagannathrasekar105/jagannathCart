@@ -42,7 +42,7 @@ function App() {
                   position="top-right"
                   reverseOrder={false}
                   toastOptions={{
-                    duration: 1300,
+                    duration: 1100,
                   }}
                 />
                 <MainRoutes />

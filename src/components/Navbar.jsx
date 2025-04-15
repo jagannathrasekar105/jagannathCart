@@ -123,7 +123,7 @@ function Navbar() {
 
                 <DropdownMenu.Portal>
                   <DropdownMenu.Content
-                    className="mr-4 bg-blue-600 dark:bg-yellow-500 shadow-xl rounded-md px-3 py-3 min-w-[180px] mt-2 z-50"
+                    className="mr-4 bg-purple-500 dark:bg-yellow-500 shadow-xl rounded-md px-3 py-3 min-w-[180px] mt-2 z-50"
                     sideOffset={8}
                   >
                     <DropdownMenu.Label className="text-sm text-white mb-2">

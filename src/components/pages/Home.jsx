@@ -6,6 +6,7 @@ import { useCart } from "../context/CartContext";
 import { useCheckoutCart } from "../context/CheckoutCartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { Heart } from "lucide-react";
+import { fetchProductWithCategories } from "../API/ProductApi";
 
 function Home() {
   const [categories, setCategories] = useState([]);
@@ -29,10 +30,7 @@ function Home() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const res = await fetch(
-          "http://localhost:5000/api/products/products-with-categories"
-        );
-        const data = await res.json();
+        const data = await fetchProductWithCategories();
         const fourCategories = data.categories;
         setCategories(fourCategories);
         setProducts(data.products);
@@ -191,15 +189,6 @@ function Home() {
         </div>
 
         {selectedProduct && (
-          // <ViewProductModal
-          //   product={selectedProduct}
-          //   handleAddToCart={addToCart}
-          //   handleWishlistToggle={handleWishlistToggle}
-          //   wishlistIds={wishlistIds}
-          //   onClose={() => setSelectedProduct(null)}
-          //   isFromWishlist={false}
-          // />
-
           <ViewProductModal
             product={selectedProduct}
             onClose={() => setSelectedProduct(null)}
