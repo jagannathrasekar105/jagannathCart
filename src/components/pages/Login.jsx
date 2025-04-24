@@ -1,10 +1,11 @@
-import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
-
+import { login, logout } from "../../redux/slices/authSlice";
+import { useDispatch, useSelector } from "react-redux";
 function Login() {
-  const { login } = useAuth();
+  const dispatch = useDispatch();
+  const { user, loading } = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -45,8 +46,9 @@ function Login() {
     }
 
     setErrors({});
-
-    const result = await login(formData.email, formData.password);
+    // console.log(formData);
+    const { email, password } = formData;
+    const result = await dispatch(login({ email, password }));
 
     if (result.error) {
       return;
@@ -56,6 +58,10 @@ function Login() {
 
     navigate("/");
   };
+  // useEffect(() => {
+  //   // Auto logout when user enters login page
+  //   dispatch(logout());
+  // }, [dispatch]);
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gradient-to-r from-indigo-400 via-purple-500 to-pink-500 dark:from-gray-900 dark:via-gray-800 dark:to-gray-900">

@@ -2,17 +2,18 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useCart } from "../context/CartContext";
-import { useCheckoutCart } from "../context/CheckoutCartContext";
 import { useWishlist } from "../context/WishlistContext";
 import ViewProductModal from "./ViewProductModal";
 import { Heart } from "lucide-react";
 import { fetchTopSellingProducts } from "../API/ProductApi";
+import { setBuyProduct } from "../../redux/slices/checkoutCartSlice";
+import { useDispatch } from "react-redux";
 
 function Products() {
+  const dispatch = useDispatch();
   const [products, setProducts] = useState([]);
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { addToCart } = useCart();
-  const { setBuyProduct } = useCheckoutCart();
   const { wishlistIds, handleWishlistToggle } = useWishlist();
 
   const navigate = useNavigate();
@@ -71,7 +72,7 @@ function Products() {
                 <button
                   className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black transition whitespace-nowrap"
                   onClick={() => {
-                    setBuyProduct([{ ...product, quantity: 1 }]);
+                    dispatch(setBuyProduct([{ ...product, quantity: 1 }]));
                     navigate("/checkout");
                   }}
                 >

@@ -12,11 +12,17 @@ import {
   LogOut,
 } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { useAuth } from "./context/AuthContext";
-import { useTheme } from "./context/ThemeContext";
 import { useCart } from "./context/CartContext";
 import { useWishlist } from "./context/WishlistContext";
+import { useDispatch, useSelector } from "react-redux";
+import { toggleTheme } from "../redux/slices/themeSlice";
+import { resetCheckoutCart } from "../redux/slices/checkoutCartSlice";
 
+import {
+  logout,
+  uploadProfile,
+  removeProfile,
+} from "../redux/slices/authSlice";
 const navItems = [
   { path: "/", label: "Home" },
   { path: "/product", label: "Product" },
@@ -26,8 +32,10 @@ const navItems = [
 ];
 
 function Navbar() {
-  const { theme, toggleTheme } = useTheme();
-  const { user, logout, updateUserProfile, removeUserProfile } = useAuth();
+  const dispatch = useDispatch();
+  const { user, loading } = useSelector((state) => state.auth);
+  const theme = useSelector((state) => state.theme.mode);
+
   const { cartItems } = useCart();
   const { wishlist } = useWishlist();
   const navigate = useNavigate();
@@ -39,7 +47,7 @@ function Navbar() {
 
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
-    if (file) updateUserProfile(file);
+    if (file) dispatch(uploadProfile(file));
     setDropdownOpen(false);
   };
 
@@ -83,7 +91,7 @@ function Navbar() {
 
         {/* Theme Toggle */}
         <button
-          onClick={toggleTheme}
+          onClick={() => dispatch(toggleTheme())}
           className="p-2 bg-gray-200 dark:bg-gray-700 text-black dark:text-white rounded-full shadow transition"
         >
           {theme === "dark" ? <Sun size={22} /> : <Moon size={22} />}
@@ -174,7 +182,7 @@ function Navbar() {
                         label="Remove Profile Picture"
                         icon={<Trash className="w-4 h-4" />}
                         onClick={() => {
-                          removeUserProfile();
+                          dispatch(removeProfile());
                           setDropdownOpen(false);
                         }}
                       />
@@ -183,8 +191,9 @@ function Navbar() {
                       label="Logout"
                       icon={<LogOut className="w-4 h-4" />}
                       onClick={() => {
-                        logout();
+                        dispatch(logout());
                         setDropdownOpen(false);
+                        dispatch(resetCheckoutCart());
                       }}
                     />
                   </DropdownMenu.Content>

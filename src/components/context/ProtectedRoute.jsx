@@ -1,8 +1,8 @@
-import { useAuth } from "../context/AuthContext";
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 export default function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
+  const { user, loading } = useSelector((state) => state.auth);
 
   // ⏳ While checking auth status, don't render anything
   if (loading) {

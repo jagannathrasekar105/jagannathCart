@@ -1,10 +1,11 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { Eye, EyeOff } from "lucide-react";
-
+import { useDispatch, useSelector } from "react-redux";
+import { register } from "../../redux/slices/authSlice";
 function Register() {
-  const { register } = useAuth();
+  const dispatch = useDispatch();
+  const { user, loading } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const [formData, setFormData] = useState({
@@ -82,13 +83,7 @@ function Register() {
 
     setErrors({});
 
-    const result = await register(
-      formData.firstName,
-      formData.lastName,
-      formData.email,
-      formData.username,
-      formData.password
-    );
+    const result = await dispatch(register(formData));
 
     if (result.error) {
       return; // Optionally, you can set a general error state here

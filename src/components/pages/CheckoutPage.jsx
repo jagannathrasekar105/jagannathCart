@@ -1,18 +1,20 @@
-import React, { useState, useMemo, useCallback } from "react";
+import React, { useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 import { X, Plus, Minus } from "lucide-react";
 import RemoveProductModal from "./RemoveProductModal";
-import { useCheckoutCart } from "../context/CheckoutCartContext";
+import {
+  selectTotalAmount,
+  removeFromBuyProduct,
+  updateBuyProductQuantity,
+} from "../../redux/slices/checkoutCartSlice";
+import { useDispatch, useSelector } from "react-redux";
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
-  const {
-    buyProduct,
-    setBuyProduct,
-    removeFromBuyProduct,
-    updateBuyProductQuantity,
-    totalAmount,
-  } = useCheckoutCart();
+  const dispatch = useDispatch();
+  const buyProduct =
+    useSelector((state) => state.checkoutCart.buyProduct) || [];
+  const totalAmount = useSelector(selectTotalAmount);
 
   const [modalState, setModalState] = useState({ show: false, product: null });
 
@@ -23,29 +25,29 @@ export default function CheckoutPage() {
   const confirmRemove = useCallback(() => {
     const productId = modalState.product?.id;
     if (productId) {
-      removeFromBuyProduct(productId);
+      dispatch(removeFromBuyProduct(productId));
     }
     setModalState({ show: false, product: null });
-  }, [modalState, removeFromBuyProduct]);
+  }, [dispatch, modalState]);
 
   const handleQuantityChange = useCallback(
     (productId, currentQty, type) => {
       const newQty =
         type === "inc" ? currentQty + 1 : Math.max(currentQty - 1, 1);
-      updateBuyProductQuantity(productId, newQty);
+      dispatch(updateBuyProductQuantity(productId, newQty));
     },
-    [updateBuyProductQuantity]
+    [dispatch]
   );
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-pink-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 p-6">
-      <div className="max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-8 space-y-2 ">
-        <h1 className="text-4xl font-extrabold text-center text-pink-600 dark:text-yellow-400 tracking-wide ">
+      <div className="max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-8 space-y-2">
+        <h1 className="text-4xl font-extrabold text-center text-pink-600 dark:text-yellow-400 tracking-wide">
           🛒 Checkout Summary
         </h1>
 
         {buyProduct.length === 0 ? (
-          <p className="text-center text-gray-600 dark:text-yellow-500 ">
+          <p className="text-center text-gray-600 dark:text-yellow-500">
             No products to checkout.
           </p>
         ) : (
@@ -55,6 +57,7 @@ export default function CheckoutPage() {
                 parseFloat(item.final_price) * item.quantity +
                 parseFloat(item.shipping_cost)
               ).toFixed(2);
+
               return (
                 <div
                   key={item.cartItemId || item.id}

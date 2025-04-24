@@ -13,12 +13,9 @@ import Product from "./components/pages/Product";
 import ProtectedRoute from "./components/context/ProtectedRoute";
 import CheckoutPage from "./components/pages/CheckoutPage";
 import ConfirmAndPayPage from "./components/pages/ConfirmAndPayPage";
-import { AuthProvider, useAuth } from "./components/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import { useMemo, useEffect } from "react";
-import { ThemeProvider } from "./components/context/ThemeContext";
 import { CartProvider } from "./components/context/CartContext";
-import { CheckoutCartProvider } from "./components/context/CheckoutCartContext";
 import YourOrderPage from "./components/pages/YourOrderPage";
 import HistoryPage from "./components/pages/HistoryPage";
 import OrderSuccessPage from "./components/pages/OrderSuccessPage";
@@ -27,31 +24,27 @@ import {
   WishlistProvider,
   useWishlist,
 } from "./components/context/WishlistContext";
+import { useDispatch, useSelector } from "react-redux";
+import { setTheme } from "./redux/slices/themeSlice";
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <BrowserRouter>
-          <CartProvider>
-            <CheckoutCartProvider>
-              <WishlistProvider>
-                <WishlistInit />
-                <Navbar />
-                <Toaster
-                  position="top-right"
-                  reverseOrder={false}
-                  toastOptions={{
-                    duration: 1100,
-                  }}
-                />
-                <MainRoutes />
-              </WishlistProvider>
-            </CheckoutCartProvider>
-          </CartProvider>
-        </BrowserRouter>
-      </ThemeProvider>
-    </AuthProvider>
+    <BrowserRouter>
+      <CartProvider>
+        <WishlistProvider>
+          <WishlistInit />
+          <Navbar />
+          <Toaster
+            position="top-right"
+            reverseOrder={false}
+            toastOptions={{
+              duration: 1100,
+            }}
+          />
+          <MainRoutes />
+        </WishlistProvider>
+      </CartProvider>
+    </BrowserRouter>
   );
 }
 
@@ -69,7 +62,14 @@ function WishlistInit() {
 }
 
 function MainRoutes() {
-  const { user, loading } = useAuth();
+  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
+  const theme = useSelector((state) => state.theme.mode);
+
+  useEffect(() => {
+    dispatch(setTheme(theme));
+  }, [dispatch, theme]);
+  const { user, loading } = useSelector((state) => state.auth);
   const isAuthenticated = useMemo(() => !!user, [user]);
 
   if (loading) return null;
@@ -111,7 +111,14 @@ function MainRoutes() {
       <Route path="/confirmAndPay" element={<ConfirmAndPayPage />} />
       <Route path="/order" element={<YourOrderPage />} />
       <Route path="/history" element={<HistoryPage />} />
-      <Route path="/order-success" element={<OrderSuccessPage />} />
+      <Route
+        path="/order-success"
+        element={
+          <ProtectedRoute>
+            <OrderSuccessPage />
+          </ProtectedRoute>
+        }
+      />
       <Route path="/profile" element={<ProfilePage />} />
     </Routes>
   );

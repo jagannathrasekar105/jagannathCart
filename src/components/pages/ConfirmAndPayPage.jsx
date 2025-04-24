@@ -2,12 +2,13 @@ import React, { useState, useMemo } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { X, Plus, Minus } from "lucide-react";
 import RemoveProductModal from "./RemoveProductModal";
-import { useCheckoutCart } from "../context/CheckoutCartContext";
-import { useAuth } from "../context/AuthContext";
-import OrderSuccessPage from "./OrderSuccessPage";
 import { showErrorToast } from "../../utils/toastUtils";
 import { placeOrder } from "../API/OrderApi";
-
+import { useDispatch, useSelector } from "react-redux";
+import {
+  removeFromBuyProduct,
+  updateBuyProductQuantity,
+} from "../../redux/slices/checkoutCartSlice";
 const shippingFields = ["name", "mobile", "address", "city", "pincode"];
 const paymentOptions = [
   "UPI",
@@ -17,14 +18,12 @@ const paymentOptions = [
 ];
 
 export default function ConfirmAndPayPage() {
+  const dispatch = useDispatch();
   const navigate = useNavigate();
-  const {
-    buyProduct,
-    setBuyProduct,
-    removeFromBuyProduct,
-    updateBuyProductQuantity,
-  } = useCheckoutCart();
-  const { user } = useAuth();
+
+  const { user, loading } = useSelector((state) => state.auth);
+  const buyProduct =
+    useSelector((state) => state.checkoutCart.buyProduct) || [];
 
   const [form, setForm] = useState({
     name: "",
@@ -61,7 +60,7 @@ export default function ConfirmAndPayPage() {
 
     const newQty =
       action === "inc" ? item.quantity + 1 : Math.max(1, item.quantity - 1);
-    updateBuyProductQuantity(productId, newQty);
+    dispatch(updateBuyProductQuantity(productId, newQty));
   };
 
   const handlePlaceOrder = async () => {
@@ -228,7 +227,7 @@ export default function ConfirmAndPayPage() {
           product={modalState.product}
           onCancel={() => setModalState({ show: false, product: null })}
           onConfirm={() => {
-            removeFromBuyProduct(modalState.product.id);
+            dispatch(removeFromBuyProduct(modalState.product.id));
             setModalState({ show: false, product: null });
           }}
         />

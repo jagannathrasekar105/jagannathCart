@@ -3,10 +3,11 @@ import { useNavigate } from "react-router-dom";
 import FilterDropdown from "./FilterDropdown";
 import ViewProductModal from "./ViewProductModal";
 import { useCart } from "../context/CartContext";
-import { useCheckoutCart } from "../context/CheckoutCartContext";
 import { useWishlist } from "../context/WishlistContext";
 import { Heart } from "lucide-react";
 import { fetchProductWithCategories } from "../API/ProductApi";
+import { useDispatch } from "react-redux";
+import { setBuyProduct } from "../../redux/slices/checkoutCartSlice";
 
 function Home() {
   const [categories, setCategories] = useState([]);
@@ -16,9 +17,9 @@ function Home() {
   const [selectedCategoryId, setSelectedCategoryId] = useState("");
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { addToCart } = useCart();
-  const { setBuyProduct } = useCheckoutCart();
   const { wishlistIds, handleWishlistToggle } = useWishlist();
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const categoryStyles = [
     { bg: "bg-gradient-to-r from-red-400 to-pink-500" },
@@ -133,7 +134,7 @@ function Home() {
                 <button
                   className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black transition whitespace-nowrap"
                   onClick={() => {
-                    setBuyProduct([{ ...product, quantity: 1 }]);
+                    dispatch(setBuyProduct([{ ...product, quantity: 1 }]));
                     navigate("/checkout");
                   }}
                 >

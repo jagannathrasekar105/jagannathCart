@@ -4,13 +4,13 @@ import { useCart } from "../context/CartContext";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import ViewProductModal from "./ViewProductModal";
-import { useAuth } from "../context/AuthContext";
+import { useSelector } from "react-redux";
 
 export default function Wishlist() {
   const { wishlist, removeFromWishlist, fetchWishlist } = useWishlist();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const { addToCart } = useCart();
-  const { user } = useAuth();
+  const { user, loading } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (user?.id) {

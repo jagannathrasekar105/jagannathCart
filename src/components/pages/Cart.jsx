@@ -1,18 +1,19 @@
 import React, { useState } from "react";
 import { Minus, Plus } from "lucide-react";
 import { useCart } from "../context/CartContext";
-import { useCheckoutCart } from "../context/CheckoutCartContext";
 import { Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import ViewProductModal from "./ViewProductModal";
 import { showErrorToast } from "../../utils/toastUtils";
+import { setBuyProduct } from "../../redux/slices/checkoutCartSlice";
+import { useDispatch } from "react-redux";
 
 export default function Cart() {
   const navigate = useNavigate();
   const { cartItems, removeFromCart, updateCartQuantity } = useCart();
-  const { setBuyProduct } = useCheckoutCart();
   const [selectedProduct, setSelectedProduct] = useState(null);
   const [selectedItems, setSelectedItems] = useState([]);
+  const dispatch = useDispatch();
 
   const handleQuantityChange = async (index, change) => {
     const item = cartItems[index];
@@ -46,7 +47,7 @@ export default function Cart() {
     );
     if (!selectedProducts.length)
       return showErrorToast("🛍️ Select at least one item to continue.");
-    setBuyProduct(selectedProducts);
+    dispatch(setBuyProduct(selectedProducts));
     navigate("/checkout");
   };
 
@@ -195,7 +196,7 @@ export default function Cart() {
                 onClose={() => setSelectedProduct(null)}
                 buttonLabel="Buy"
                 buttonAction={() => {
-                  setBuyProduct([selectedProduct]);
+                  dispatch(setBuyProduct([selectedProduct]));
                   navigate("/checkout");
                 }}
               />

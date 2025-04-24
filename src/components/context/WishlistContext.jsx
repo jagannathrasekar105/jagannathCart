@@ -1,16 +1,16 @@
 import { createContext, useContext, useEffect, useState } from "react";
-import { useAuth } from "./AuthContext";
 import {
   fetchWishlistAPI,
   addToWishlistAPI,
   removeFromWishlistAPI,
 } from "../API/WishlistApi";
 import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
+import { useSelector } from "react-redux";
 
 const WishlistContext = createContext();
 
 export const WishlistProvider = ({ children }) => {
-  const { user } = useAuth();
+  const { user, loading } = useSelector((state) => state.auth);
   const [wishlist, setWishlist] = useState([]);
 
   const wishlistIds = wishlist?.map((item) => item.id) || [];
