@@ -1,4 +1,4 @@
-const BASE_URL = "http://localhost:5000/api/wishlist";
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api/wishlist`;
 
 export const fetchWishlistAPI = async (userId) => {
   const res = await fetch(`${BASE_URL}/${userId}`);

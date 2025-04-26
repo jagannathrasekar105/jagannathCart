@@ -37,8 +37,8 @@ const OrderSuccessPage = () => {
 
         const responses = await Promise.all(
           uniqueProductIds.map((id) =>
-            fetch(`http://localhost:5000/api/products/${id}`).then((res) =>
-              res.json()
+            fetch(`${import.meta.env.VITE_API_URL}/api/products/${id}`).then(
+              (res) => res.json()
             )
           )
         );
