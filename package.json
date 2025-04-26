@@ -23,7 +23,8 @@
     "react-select": "^5.10.1",
     "react-spring": "^6.0.0",
     "swiper": "^11.2.6",
-    "tailwind-scrollbar": "^3.0.1"
+    "tailwind-scrollbar": "^3.0.1",
+    "vite": "^4.5.0"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",
@@ -36,7 +37,6 @@
     "eslint-plugin-react-refresh": "^0.4.19",
     "globals": "^15.15.0",
     "postcss": "^8.5.3",
-    "tailwindcss": "^3.3.5",
-    "vite": "^6.2.0"
+    "tailwindcss": "^3.3.5"
   }
 }
