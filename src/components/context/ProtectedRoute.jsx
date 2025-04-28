@@ -1,17 +1,12 @@
-import { useAuth } from "../context/AuthContext";
+import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 export default function ProtectedRoute({ children }) {
-  const { user, loading } = useAuth();
-
-  // ⏳ While checking auth status, don't render anything
-  if (loading) {
-    return null; // Or add a loader here if desired
-  }
+  const { token } = useSelector((state) => state.auth);
 
   // ❌ Not logged in? Redirect to login
-  if (!user) {
-    return <Navigate to="/login" />;
+  if (!token) {
+    return <Navigate to="/login" replace />;
   }
 
   // ✅ Authenticated, render children

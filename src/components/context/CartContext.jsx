@@ -1,18 +1,18 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { showSuccessToast, showErrorToast } from "../../utils/toastUtils";
-import { useAuth } from "./AuthContext";
 import {
   fetchCartItemsApi,
   addToCartApi,
   updateCartApi,
   removeFromCartApi,
 } from "../API/CartApi";
+import { useSelector } from "react-redux";
 
 const CartContext = createContext();
 
 export const CartProvider = ({ children }) => {
   const [cartItems, setCartItems] = useState([]);
-  const { user } = useAuth();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (user?.id) {

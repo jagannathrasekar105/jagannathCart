@@ -12,10 +12,15 @@ import {
   LogOut,
 } from "lucide-react";
 import * as DropdownMenu from "@radix-ui/react-dropdown-menu";
-import { useAuth } from "./context/AuthContext";
 import { useTheme } from "./context/ThemeContext";
 import { useCart } from "./context/CartContext";
 import { useWishlist } from "./context/WishlistContext";
+import {
+  logout,
+  uploadProfilePic,
+  removeProfilePic,
+} from "./redux/action/authActions";
+import { useDispatch, useSelector } from "react-redux";
 
 const navItems = [
   { path: "/", label: "Home" },
@@ -27,11 +32,13 @@ const navItems = [
 
 function Navbar() {
   const { theme, toggleTheme } = useTheme();
-  const { user, logout, updateUserProfile, removeUserProfile } = useAuth();
   const { cartItems } = useCart();
   const { wishlist } = useWishlist();
   const navigate = useNavigate();
   const location = useLocation();
+
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
 
   const fileInputRef = useRef(null);
   const [fileInputKey, setFileInputKey] = useState(Date.now());
@@ -39,7 +46,7 @@ function Navbar() {
 
   const handleFileUpload = (e) => {
     const file = e.target.files?.[0];
-    if (file) updateUserProfile(file);
+    if (file) dispatch(uploadProfilePic(file));
     setDropdownOpen(false);
   };
 
@@ -174,7 +181,7 @@ function Navbar() {
                         label="Remove Profile Picture"
                         icon={<Trash className="w-4 h-4" />}
                         onClick={() => {
-                          removeUserProfile();
+                          dispatch(removeProfilePic());
                           setDropdownOpen(false);
                         }}
                       />
@@ -183,7 +190,7 @@ function Navbar() {
                       label="Logout"
                       icon={<LogOut className="w-4 h-4" />}
                       onClick={() => {
-                        logout();
+                        dispatch(logout());
                         setDropdownOpen(false);
                       }}
                     />

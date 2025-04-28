@@ -13,7 +13,6 @@ import Product from "./components/pages/Product";
 import ProtectedRoute from "./components/context/ProtectedRoute";
 import CheckoutPage from "./components/pages/CheckoutPage";
 import ConfirmAndPayPage from "./components/pages/ConfirmAndPayPage";
-import { AuthProvider, useAuth } from "./components/context/AuthContext";
 import { Toaster } from "react-hot-toast";
 import { useMemo, useEffect } from "react";
 import { ThemeProvider } from "./components/context/ThemeContext";
@@ -27,31 +26,31 @@ import {
   WishlistProvider,
   useWishlist,
 } from "./components/context/WishlistContext";
+import { useDispatch, useSelector } from "react-redux";
+import { authLogin } from "./components/redux/action/authActions";
 
 function App() {
   return (
-    <AuthProvider>
-      <ThemeProvider>
-        <BrowserRouter>
-          <CartProvider>
-            <CheckoutCartProvider>
-              <WishlistProvider>
-                <WishlistInit />
-                <Navbar />
-                <Toaster
-                  position="top-right"
-                  reverseOrder={false}
-                  toastOptions={{
-                    duration: 1100,
-                  }}
-                />
-                <MainRoutes />
-              </WishlistProvider>
-            </CheckoutCartProvider>
-          </CartProvider>
-        </BrowserRouter>
-      </ThemeProvider>
-    </AuthProvider>
+    <ThemeProvider>
+      <BrowserRouter>
+        <CartProvider>
+          <CheckoutCartProvider>
+            <WishlistProvider>
+              <WishlistInit />
+              <Navbar />
+              <Toaster
+                position="top-right"
+                reverseOrder={false}
+                toastOptions={{
+                  duration: 1100,
+                }}
+              />
+              <MainRoutes />
+            </WishlistProvider>
+          </CheckoutCartProvider>
+        </CartProvider>
+      </BrowserRouter>
+    </ThemeProvider>
   );
 }
 
@@ -69,10 +68,15 @@ function WishlistInit() {
 }
 
 function MainRoutes() {
-  const { user, loading } = useAuth();
+  const dispatch = useDispatch();
+  const { user } = useSelector((state) => state.auth);
   const isAuthenticated = useMemo(() => !!user, [user]);
-
-  if (loading) return null;
+  useEffect(() => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      dispatch(authLogin(user, token));
+    }
+  }, [dispatch]);
 
   return (
     <Routes>

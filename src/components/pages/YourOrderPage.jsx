@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext";
 import { CheckCircle, Truck, CreditCard, Home } from "lucide-react";
+import { useSelector } from "react-redux";
 
 export default function YourOrderPage() {
   const navigate = useNavigate();
   const [orders, setOrders] = useState([]);
-  const { user } = useAuth();
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
     if (!user || !user.id) return;

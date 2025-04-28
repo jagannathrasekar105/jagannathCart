@@ -23,6 +23,7 @@ export const loginUser = async (email, password) => {
 };
 
 export const uploadProfilePicture = async (file, token) => {
+  // const token = localStorage.getItem("token");
   const formData = new FormData();
   formData.append("profilePic", file);
 

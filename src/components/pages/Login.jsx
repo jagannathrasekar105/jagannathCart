@@ -1,10 +1,13 @@
 import { useState } from "react";
-import { useAuth } from "../context/AuthContext";
+
 import { useNavigate } from "react-router-dom";
 import { EyeIcon, EyeOffIcon } from "lucide-react";
+import { login } from "../redux/action/authActions";
+import { useDispatch } from "react-redux";
 
 function Login() {
-  const { login } = useAuth();
+  // const { login } = useAuth();
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
@@ -46,7 +49,7 @@ function Login() {
 
     setErrors({});
 
-    const result = await login(formData.email, formData.password);
+    const result = await dispatch(login(formData));
 
     if (result.error) {
       return;

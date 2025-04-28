@@ -19,6 +19,7 @@
     "react-confetti": "^6.4.0",
     "react-dom": "^19.1.0",
     "react-hot-toast": "^2.5.2",
+    "react-redux": "^9.2.0",
     "react-router-dom": "^6.30.0",
     "react-select": "^5.10.1",
     "react-spring": "^6.0.0",

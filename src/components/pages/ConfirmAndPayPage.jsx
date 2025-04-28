@@ -3,10 +3,10 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { X, Plus, Minus } from "lucide-react";
 import RemoveProductModal from "./RemoveProductModal";
 import { useCheckoutCart } from "../context/CheckoutCartContext";
-import { useAuth } from "../context/AuthContext";
 import OrderSuccessPage from "./OrderSuccessPage";
 import { showErrorToast } from "../../utils/toastUtils";
 import { placeOrder } from "../API/OrderApi";
+import { useSelector } from "react-redux";
 
 const shippingFields = ["name", "mobile", "address", "city", "pincode"];
 const paymentOptions = [
@@ -24,7 +24,7 @@ export default function ConfirmAndPayPage() {
     removeFromBuyProduct,
     updateBuyProductQuantity,
   } = useCheckoutCart();
-  const { user } = useAuth();
+  const { user } = useSelector((state) => state.auth);
 
   const [form, setForm] = useState({
     name: "",
