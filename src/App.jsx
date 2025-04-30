@@ -73,8 +73,11 @@ function MainRoutes() {
   const isAuthenticated = useMemo(() => !!user, [user]);
   useEffect(() => {
     const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(authLogin(user, token));
+    const userData = localStorage.getItem("user");
+
+    if (token && userData) {
+      const parsedUser = JSON.parse(userData);
+      dispatch(authLogin(parsedUser, token));
     }
   }, [dispatch]);
 
