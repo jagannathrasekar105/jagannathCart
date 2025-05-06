@@ -114,12 +114,54 @@ function MainRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="/checkout" element={<CheckoutPage />} />
-      <Route path="/confirmAndPay" element={<ConfirmAndPayPage />} />
-      <Route path="/order" element={<YourOrderPage />} />
-      <Route path="/history" element={<HistoryPage />} />
-      <Route path="/order-success" element={<OrderSuccessPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/confirmAndPay"
+        element={
+          <ProtectedRoute>
+            <ConfirmAndPayPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/order"
+        element={
+          <ProtectedRoute>
+            <YourOrderPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/history"
+        element={
+          <ProtectedRoute>
+            <HistoryPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/order-success"
+        element={
+          <ProtectedRoute>
+            <OrderSuccessPage />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

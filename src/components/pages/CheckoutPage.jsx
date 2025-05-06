@@ -38,8 +38,8 @@ export default function CheckoutPage() {
   );
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 p-6">
-      <div className="max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-8 space-y-2 ">
+    <div className=" bg-gradient-to-br from-pink-50 to-yellow-100 dark:from-gray-900 dark:to-gray-800 p-10 space-y-10  ">
+      <div className="max-w-5xl mx-auto bg-white dark:bg-gray-900 shadow-2xl rounded-2xl p-8   ">
         <h1 className="text-4xl font-extrabold text-center text-pink-600 dark:text-yellow-400 tracking-wide ">
           🛒 Checkout Summary
         </h1>
