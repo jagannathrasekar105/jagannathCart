@@ -21,7 +21,7 @@ const ViewProductModal = ({
 }) => {
   if (!product) return null;
 
-  const isWishlisted = wishlistIds?.includes?.(product.id);
+  const isWishlisted = wishlistIds?.includes?.(product.ID);
   const inStock = product.stock_quantity > 0;
 
   return (
@@ -30,8 +30,8 @@ const ViewProductModal = ({
         {/* Product Image */}
         <div className="w-full h-56 bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden rounded-t-2xl">
           <img
-            src={product.image_url}
-            alt={product.name}
+            src={product.IMAGE_URL}
+            alt={product.NAME}
             className="object-contain max-h-full transition-transform duration-300 hover:scale-105"
           />
         </div>
@@ -51,10 +51,10 @@ const ViewProductModal = ({
         <div className="px-5 pb-5 space-y-3">
           {/* Title and Wishlist */}
           <div className="flex justify-between items-center">
-            <h2 className="text-xl font-bold">{product.name}</h2>
+            <h2 className="text-xl font-bold">{product.NAME}</h2>
             {showWishlistButton && wishlistAction && (
               <button
-                onClick={() => wishlistAction(product.id)}
+                onClick={() => wishlistAction(product.ID)}
                 className={`transition hover:scale-110 ${
                   isWishlisted
                     ? "text-red-600 animate-pulse"
@@ -74,17 +74,17 @@ const ViewProductModal = ({
           <div className="space-y-1">
             <div className="flex items-center gap-2">
               <span className="text-lg font-bold text-green-600 dark:text-yellow-400">
-                ₹{product.final_price}
+                ₹{product.FINAL_PRICE}
               </span>
               <span className="line-through text-gray-400 text-sm">
-                ₹{product.price}
+                ₹{product.PRICE}
               </span>
               <span className="text-sm text-red-500 flex items-center gap-1">
-                <Percent className="w-4 h-4" /> {product.discount}% off
+                <Percent className="w-4 h-4" /> {product.DISCOUNT}% off
               </span>
             </div>
             <div className="text-sm text-gray-500 dark:text-gray-400 flex items-center gap-2">
-              <Truck className="w-4 h-4" /> Shipping: ₹{product.shipping_cost}
+              <Truck className="w-4 h-4" /> Shipping: ₹{product.SHIPPING_COST}
             </div>
           </div>
 
@@ -97,11 +97,11 @@ const ViewProductModal = ({
                 <XCircle className="w-5 h-5 text-red-500" />
               )}
               {inStock
-                ? `In Stock (${product.stock_quantity} left)`
+                ? `In Stock (${product.STOCK_QUANTITY} left)`
                 : "Out of Stock"}
             </div>
             <div className="flex items-center gap-1 text-yellow-400">
-              ★ {product.rating}
+              ★ {product.RATING}
             </div>
           </div>
 
@@ -111,19 +111,19 @@ const ViewProductModal = ({
               <Layers className="w-4 h-4" />
               Brand:{" "}
               <span className="font-semibold">
-                {product.brand || "Generic"}
+                {product.BRAND || "Generic"}
               </span>
             </div>
             <div className="flex items-center gap-2">
               <Tag className="w-4 h-4" />
               Category:{" "}
-              <span className="font-semibold">{product.category || "N/A"}</span>
+              <span className="font-semibold">{product.CATEGORY || "N/A"}</span>
             </div>
           </div>
 
           {/* Description */}
           <p className="text-sm text-gray-700 dark:text-gray-400 pt-3 leading-relaxed">
-            {product.description}
+            {product.DESCRIPTION}
           </p>
 
           {/* Action Button */}
@@ -135,7 +135,7 @@ const ViewProductModal = ({
                   ? "bg-green-600 hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black animate-bounce-slow"
                   : "bg-gray-400 cursor-not-allowed"
               }`}
-              onClick={() => buttonAction(product.id)}
+              onClick={() => buttonAction(product.ID)}
             >
               {buttonLabel}
             </button>

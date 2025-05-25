@@ -52,12 +52,12 @@ export default function CheckoutPage() {
           <div className="space-y-6 max-h-80 overflow-y-auto p-2 overflow-x-hidden scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-pink-100 dark:scrollbar-thumb-yellow-400 dark:scrollbar-track-gray-700">
             {buyProduct.map((item) => {
               const total = (
-                parseFloat(item.final_price) * item.quantity +
-                parseFloat(item.shipping_cost)
+                parseFloat(item.FINAL_PRICE) * item.quantity +
+                parseFloat(item.SHIPPING_COST)
               ).toFixed(2);
               return (
                 <div
-                  key={item.cartItemId || item.id}
+                  key={item.cartItemId || item.ID}
                   className="relative border border-pink-200 dark:border-yellow-500 rounded-xl p-6 bg-pink-50/60 dark:bg-gray-800 shadow-md transform transition-transform hover:scale-[1.01]"
                 >
                   <button
@@ -69,44 +69,44 @@ export default function CheckoutPage() {
 
                   <div className="flex flex-col sm:flex-row gap-6 items-start">
                     <img
-                      src={item.image_url}
-                      alt={item.name}
+                      src={item.IMAGE_URL}
+                      alt={item.NAME}
                       className="w-32 h-32 object-contain rounded-lg bg-white border shadow dark:bg-gray-700"
                     />
                     <div className="flex-1 space-y-3">
                       <h2 className="text-2xl font-bold text-gray-800 dark:text-white">
-                        {item.name}
+                        {item.NAME}
                       </h2>
                       <p className="text-sm text-gray-600 dark:text-gray-300">
-                        {item.description}
+                        {item.DESCRIPTION}
                       </p>
                       <p className="text-sm text-gray-500 dark:text-gray-400">
                         <span className="font-semibold">Brand:</span>{" "}
-                        {item.brand}
+                        {item.BRAND}
                       </p>
-                      {item.category && (
+                      {item.CATEGORY && (
                         <p className="text-sm text-gray-500 dark:text-gray-400">
                           <span className="font-semibold">Category:</span>{" "}
-                          {item.category}
+                          {item.CATEGORY}
                         </p>
                       )}
                       <p className="text-sm text-gray-500 dark:text-gray-400">
                         <span className="font-semibold">Rating:</span> ⭐{" "}
-                        {item.rating}
+                        {item.RATING}
                       </p>
 
                       <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 mt-4 text-sm text-gray-700 dark:text-gray-300">
                         <div>
                           <span className="text-gray-500">Original:</span> ₹
-                          {item.price}
+                          {item.PRICE}
                         </div>
                         <div>
                           <span className="text-gray-500">Discount:</span>{" "}
-                          {item.discount}%
+                          {item.DISCOUNT}%
                         </div>
                         <div>
                           <span className="text-gray-500">Final Price:</span> ₹
-                          {item.final_price}
+                          {item.FINAL_PRICE}
                         </div>
                         <div>
                           <span className="text-gray-500">Quantity:</span>
@@ -142,7 +142,7 @@ export default function CheckoutPage() {
                         </div>
                         <div>
                           <span className="text-gray-500">Shipping:</span> ₹
-                          {item.shipping_cost}
+                          {item.SHIPPING_COST}
                         </div>
                         <div className="font-semibold text-pink-600 dark:text-yellow-400">
                           Total: ₹{total}

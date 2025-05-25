@@ -17,17 +17,17 @@ export default function Cart() {
   const handleQuantityChange = async (index, change) => {
     const item = cartItems[index];
     const newQty = item.quantity + change;
-    if (newQty >= 1) await updateCartQuantity(item.id, newQty);
+    if (newQty >= 1) await updateCartQuantity(item.ID, newQty);
   };
   const handleRemove = async (productId) => {
     await removeFromCart(productId);
-    setSelectedItems((prev) => prev.filter((id) => id !== productId));
+    setSelectedItems((prev) => prev.filter((id) => ID !== productId));
   };
 
   const handleSelectItem = (itemId) => {
     setSelectedItems((prev) =>
       prev.includes(itemId)
-        ? prev.filter((id) => id !== itemId)
+        ? prev.filter((id) => ID !== itemId)
         : [...prev, itemId]
     );
   };
@@ -42,7 +42,7 @@ export default function Cart() {
 
   const handleMultiProductCheckout = () => {
     const selectedProducts = cartItems.filter((item) =>
-      selectedItems.includes(item.id)
+      selectedItems.includes(item.ID)
     );
     if (!selectedProducts.length)
       return showErrorToast("🛍️ Select at least one item to continue.");
@@ -117,7 +117,7 @@ export default function Cart() {
             <div className="max-h-80 overflow-y-auto pr-4 space-y-2 scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-pink-100 dark:scrollbar-thumb-yellow-400 dark:scrollbar-track-gray-700">
               {cartItems.map((item, index) => (
                 <motion.div
-                  key={item.cartItemId || item.id}
+                  key={item.cartItemId || item.ID}
                   initial={{ opacity: 0, x: -30 }}
                   animate={{ opacity: 1, x: 0 }}
                   transition={{ delay: index * 0.05, duration: 0.3 }}
@@ -125,8 +125,8 @@ export default function Cart() {
                 >
                   <input
                     type="checkbox"
-                    checked={selectedItems.includes(item.id)}
-                    onChange={() => handleSelectItem(item.id)}
+                    checked={selectedItems.includes(item.ID)}
+                    onChange={() => handleSelectItem(item.ID)}
                     className="accent-pink-500 dark:accent-yellow-400 mr-4"
                   />
 
@@ -135,16 +135,16 @@ export default function Cart() {
                     onClick={() => setSelectedProduct(item)}
                   >
                     <img
-                      src={item.image_url}
-                      alt={item.name}
+                      src={item.IMAGE_URL}
+                      alt={item.NAME}
                       className="w-20 h-20 object-contain rounded bg-gray-100 dark:bg-gray-700"
                     />
                     <div>
                       <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
-                        {item.name}
+                        {item.NAME}
                       </h3>
                       <p className="text-pink-600 dark:text-yellow-400 font-bold">
-                        ₹{item.final_price}
+                        ₹{item.FINAL_PRICE}
                       </p>
                     </div>
                   </div>
@@ -176,11 +176,11 @@ export default function Cart() {
 
                   <div className="flex flex-col items-end gap-2 flex-1 text-right">
                     <p className="text-sm font-semibold text-green-600 dark:text-yellow-300">
-                      ₹{(item.final_price * item.quantity).toFixed(2)}
+                      ₹{(item.FINAL_PRICE * item.quantity).toFixed(2)}
                     </p>
                     <button
                       className="text-sm text-red-500 dark:text-red-400 hover:underline"
-                      onClick={() => handleRemove(item.id)}
+                      onClick={() => handleRemove(item.ID)}
                     >
                       Remove
                     </button>

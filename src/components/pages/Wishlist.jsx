@@ -6,7 +6,6 @@ import { motion } from "framer-motion";
 import ViewProductModal from "./ViewProductModal";
 import { useSelector } from "react-redux";
 
-
 export default function Wishlist() {
   const { wishlist, removeFromWishlist, fetchWishlist } = useWishlist();
   const [selectedProduct, setSelectedProduct] = useState(null);
@@ -14,8 +13,8 @@ export default function Wishlist() {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (user?.id) {
-      fetchWishlist(user.id);
+    if (user?.ID) {
+      fetchWishlist(user.ID);
     }
   }, [user]);
   const getFinalPrice = (price, discount) =>
@@ -24,7 +23,7 @@ export default function Wishlist() {
   const handleMoveToCart = async (itemId) => {
     const { success } = await addToCart(itemId, 1);
     if (success) {
-      await removeFromWishlist(user.id, itemId, false);
+      await removeFromWishlist(user.ID, itemId, false);
     }
   };
 
@@ -90,11 +89,11 @@ export default function Wishlist() {
         transition={{ delay: 0.3 }}
       >
         {wishlist.map((item, index) => {
-          const finalPrice = getFinalPrice(item.price, item.discount);
+          const finalPrice = getFinalPrice(item.PRICE, item.DISCOUNT);
 
           return (
             <motion.div
-              key={item.wishlistItemId || item.id}
+              key={item.wishlistItemId || item.ID}
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: index * 0.1, duration: 0.4 }}
@@ -105,16 +104,16 @@ export default function Wishlist() {
                 onClick={() => setSelectedProduct(item)}
               >
                 <img
-                  src={item.image_url}
-                  alt={item.name}
+                  src={item.IMAGE_URL}
+                  alt={item.NAME}
                   className="w-full h-40 object-contain bg-gray-100 dark:bg-gray-700 p-4"
                 />
                 <div className="p-4 flex-1 flex flex-col justify-between">
                   <h3 className="text-lg font-semibold text-gray-800 dark:text-white mb-1">
-                    {item.name}
+                    {item.NAME}
                   </h3>
                   <p className="text-sm text-gray-500 dark:text-gray-300 mb-3 line-clamp-2">
-                    {item.description}
+                    {item.DESCRIPTION}
                   </p>
                 </div>
               </div>
@@ -124,23 +123,23 @@ export default function Wishlist() {
                   <span className="text-pink-600 dark:text-yellow-400 text-lg font-bold">
                     ₹{finalPrice}
                   </span>
-                  {parseFloat(item.discount) > 0 && (
+                  {parseFloat(item.DISCOUNT) > 0 && (
                     <span className="line-through text-sm text-gray-400">
-                      ₹{item.price}
+                      ₹{item.PRICE}
                     </span>
                   )}
                 </div>
                 <div className="flex gap-4 items-center">
                   <button
                     className="text-sm text-pink-600 dark:text-yellow-500 hover:underline"
-                    onClick={() => handleMoveToCart(item.id)}
+                    onClick={() => handleMoveToCart(item.ID)}
                   >
                     🛒 Move to Cart
                   </button>
                   <button
                     className="text-sm text-pink-500 dark:text-yellow-500 hover:underline"
                     onClick={async () => {
-                      await removeFromWishlist(user.id, item.id);
+                      await removeFromWishlist(user.ID, item.ID);
                     }}
                   >
                     💔 Remove

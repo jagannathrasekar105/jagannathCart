@@ -88,19 +88,19 @@ function Home() {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
           {categories.slice(0, 4).map((cat, index) => (
             <button
-              key={cat.id}
+              key={cat.ID}
               onClick={() => {
-                setSelectedCategoryId(cat.id.toString());
-                setSelectedFilters([cat.id.toString()]);
+                setSelectedCategoryId(cat.ID.toString());
+                setSelectedFilters([cat.ID.toString()]);
               }}
               className={`${categoryStyles[index]?.bg || "bg-gray-400"} 
                 text-white font-semibold text-center p-6 rounded-xl shadow-lg hover:scale-105 transition-transform duration-300 ${
-                  selectedCategoryId === cat.id.toString()
+                  selectedCategoryId === cat.ID.toString()
                     ? "ring-4 ring-white dark:ring-yellow-300"
                     : ""
                 }`}
             >
-              {cat.name}
+              {cat.NAME}
             </button>
           ))}
         </div>
@@ -114,12 +114,12 @@ function Home() {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {filteredProducts.map((product) => (
             <div
-              key={product.id}
+              key={product.ID}
               className="bg-white dark:bg-gray-800 p-4 rounded-xl shadow-lg hover:shadow-2xl transition duration-300"
             >
               <img
-                src={product.image_url}
-                alt={product.name}
+                src={product.IMAGE_URL}
+                alt={product.NAME}
                 onClick={() => setSelectedProduct(product)}
                 className="h-40 w-full object-contain mx-auto rounded mb-4 hover:opacity-90 transition cursor-pointer"
               />
@@ -128,7 +128,7 @@ function Home() {
                   className="text-xl font-bold text-gray-800 dark:text-white hover:underline cursor-pointer"
                   onClick={() => setSelectedProduct(product)}
                 >
-                  {product.name}
+                  {product.NAME}
                 </h3>
                 <button
                   className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black transition whitespace-nowrap"
@@ -143,7 +143,7 @@ function Home() {
 
               <div className="flex items-center justify-between flex-wrap gap-2 mt-4">
                 <p className="text-green-600 dark:text-yellow-400 font-semibold">
-                  ₹{product.price}
+                  ₹{product.PRICE}
                 </p>
 
                 <div className="flex items-center">
@@ -151,7 +151,7 @@ function Home() {
                     <span
                       key={i}
                       className={`text-yellow-400 ${
-                        i < product.rating
+                        i < product.RATING
                           ? ""
                           : "text-gray-300 dark:text-gray-600"
                       }`}
@@ -160,18 +160,18 @@ function Home() {
                     </span>
                   ))}
                   <span className="ml-1 text-sm text-gray-500 dark:text-gray-400">
-                    ({product.rating})
+                    ({product.RATING})
                   </span>
                 </div>
 
                 <button
                   title="Toggle Wishlist"
-                  onClick={() => handleWishlistToggle(product.id)}
+                  onClick={() => handleWishlistToggle(product.ID)}
                   className="transition hover:scale-110 text-red-500 dark:text-yellow-500"
                 >
                   <Heart
                     fill={
-                      wishlistIds.includes(product.id) ? "currentColor" : "none"
+                      wishlistIds.includes(product.ID) ? "currentColor" : "none"
                     }
                     className="w-6 h-6"
                   />
@@ -179,7 +179,7 @@ function Home() {
 
                 <button
                   className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black transition whitespace-nowrap"
-                  onClick={() => addToCart(product.id)}
+                  onClick={() => addToCart(product.ID)}
                 >
                   Add to Cart
                 </button>
