@@ -80,7 +80,7 @@ export const login = ({ email, password }) => async (dispatch) => {
         localStorage.setItem("token", token);
         dispatch(authLogin(user, token));
 
-        showSuccessToast(`Login successful! Welcome back, ${user.username}!`);
+        showSuccessToast(`Login successful! Welcome back, ${user.USERNAME}!`);
         return { success: true };
 
     } catch (error) {

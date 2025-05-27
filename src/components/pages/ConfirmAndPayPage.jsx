@@ -40,9 +40,9 @@ export default function ConfirmAndPayPage() {
 
   const totalAmount = useMemo(() => {
     return buyProduct.reduce((sum, item) => {
-      const price = parseFloat(item.final_price || 0);
-      const qty = parseInt(item.quantity || 1);
-      const shipping = parseFloat(item.shipping_cost || 0);
+      const price = parseFloat(item.FINAL_PRICE || 0);
+      const qty = parseInt(item.QUANTITY || 1);
+      const shipping = parseFloat(item.SHIPPING_COST || 0);
       return sum + price * qty + shipping;
     }, 0);
   }, [buyProduct]);
@@ -56,11 +56,11 @@ export default function ConfirmAndPayPage() {
   };
 
   const updateQuantity = (productId, action) => {
-    const item = buyProduct.find((p) => p.id === productId);
+    const item = buyProduct.find((p) => p.ID === productId);
     if (!item) return;
 
     const newQty =
-      action === "inc" ? item.quantity + 1 : Math.max(1, item.quantity - 1);
+      action === "inc" ? item.QUANTITY + 1 : Math.max(1, item.QUANTITY - 1);
     updateBuyProductQuantity(productId, newQty);
   };
 
@@ -74,9 +74,9 @@ export default function ConfirmAndPayPage() {
     if (!agree) {
       return showErrorToast("⚠️ Please agree to the terms and conditions.");
     }
-
+    console.log("buyProduct", buyProduct);
     const orderData = {
-      user_id: user.id,
+      user_id: user.ID,
       total_amount: totalAmount.toFixed(2),
       name,
       mobile,
@@ -84,17 +84,18 @@ export default function ConfirmAndPayPage() {
       city,
       pincode,
       payment_method: payment,
-      items: buyProduct.map(({ id, quantity, final_price }) => ({
-        product_id: id,
-        quantity,
-        price: final_price,
+      items: buyProduct.map(({ ID, QUANTITY, FINAL_PRICE }) => ({
+        product_id: ID,
+        quantity: QUANTITY,
+        price: FINAL_PRICE,
       })),
     };
-
+    console.log("orderData", orderData);
     try {
       const result = await placeOrder(orderData);
       navigate("/order-success", { state: { orderData } });
     } catch (err) {
+      console.log(err);
       alert("❌ Something went wrong while placing your order.");
     }
   };
@@ -167,7 +168,7 @@ export default function ConfirmAndPayPage() {
             ) : (
               buyProduct.map((item) => (
                 <div
-                  key={item.id}
+                  key={item.ID}
                   className="relative border border-pink-200 dark:border-yellow-500 flex items-stretch gap-4 text-sm text-gray-700 dark:text-gray-300 mb-4 p-3 rounded-lg min-h-[120px]"
                 >
                   <button
@@ -177,29 +178,29 @@ export default function ConfirmAndPayPage() {
                     <X size={18} />
                   </button>
                   <img
-                    src={item.image_url}
-                    alt={item.name}
+                    src={item.IMAGE_URL}
+                    alt={item.NAME}
                     className="w-20 h-20 object-cover rounded self-center"
                   />
                   <div className="flex flex-col justify-center flex-1 pr-6">
-                    <p className="font-semibold break-words">{item.name}</p>
+                    <p className="font-semibold break-words">{item.NAME}</p>
                     <div className="flex items-center gap-2 mt-1">
                       <button
-                        onClick={() => updateQuantity(item.id, "dec")}
+                        onClick={() => updateQuantity(item.ID, "dec")}
                         className="text-2xl font-bold text-pink-600 dark:text-yellow-400 hover:scale-110 transition"
                       >
                         <Minus size={16} />
                       </button>
-                      <span className="px-2">{item.quantity}</span>
+                      <span className="px-2">{item.QUANTITY}</span>
                       <button
-                        onClick={() => updateQuantity(item.id, "inc")}
+                        onClick={() => updateQuantity(item.ID, "inc")}
                         className="text-2xl font-bold text-pink-600 dark:text-yellow-400 hover:scale-110 transition"
                       >
                         <Plus size={16} />
                       </button>
                     </div>
-                    <p className="mt-1">Price: ₹{item.final_price}</p>
-                    <p>Shipping: ₹{item.shipping_cost}</p>
+                    <p className="mt-1">Price: ₹{item.FINAL_PRICE}</p>
+                    <p>Shipping: ₹{item.SHIPPING_COST}</p>
                   </div>
                 </div>
               ))

@@ -14,15 +14,16 @@ export const WishlistProvider = ({ children }) => {
   const { user } = useSelector((state) => state.auth);
   const [wishlist, setWishlist] = useState([]);
 
-  const wishlistIds = wishlist?.map((item) => item.id) || [];
+  const wishlistIds = wishlist?.map((item) => item.ID) || [];
 
   useEffect(() => {
-    if (user?.id) fetchWishlist(user.id);
+    if (user?.ID) fetchWishlist(user.ID);
   }, [user]);
 
   const fetchWishlist = async (userId) => {
     try {
       const data = await fetchWishlistAPI(userId);
+
       setWishlist(data || []);
     } catch (error) {
       console.error("Failed to fetch wishlist:", error);
@@ -36,9 +37,9 @@ export const WishlistProvider = ({ children }) => {
       if (data.success) {
         setWishlist((prev) => {
           const exists = prev.some(
-            (item) => item.id === productId || item.product_id === productId
+            (item) => item.ID === productId || item.product_id === productId
           );
-          return exists ? prev : [...prev, { id: productId }];
+          return exists ? prev : [...prev, { ID: productId }];
         });
 
         showSuccessToast("Added to wishlist");
@@ -60,7 +61,7 @@ export const WishlistProvider = ({ children }) => {
       if (data.success) {
         setWishlist((prev) =>
           prev.filter(
-            (item) => item.id !== productId && item.product_id !== productId
+            (item) => item.ID !== productId && item.product_id !== productId
           )
         );
 
@@ -84,15 +85,15 @@ export const WishlistProvider = ({ children }) => {
   };
 
   const handleWishlistToggle = async (productId) => {
-    if (!user?.id) {
+    if (!user?.ID) {
       showErrorToast("Login to use wishlist");
       return;
     }
 
     if (wishlistIds.includes(productId)) {
-      await removeFromWishlist(user.id, productId);
+      await removeFromWishlist(user.ID, productId);
     } else {
-      await addToWishlist(user.id, productId);
+      await addToWishlist(user.ID, productId);
     }
   };
 

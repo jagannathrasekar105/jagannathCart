@@ -1,6 +1,11 @@
 import React from "react";
 
-export default function RemoveProductModal({ show, product, onCancel, onConfirm }) {
+export default function RemoveProductModal({
+  show,
+  product,
+  onCancel,
+  onConfirm,
+}) {
   if (!show) return null;
 
   return (
@@ -12,25 +17,28 @@ export default function RemoveProductModal({ show, product, onCancel, onConfirm 
 
         <div className="flex flex-col items-center space-y-4">
           <img
-            src={product?.image_url}
-            alt={product?.name}
+            src={product?.IMAGE_URL}
+            alt={product?.NAME}
             className="w-24 h-24 object-contain rounded bg-white border shadow"
           />
           <div className="space-y-1 text-sm text-gray-700 dark:text-gray-300">
             <p>
-              <span className="font-semibold">Name:</span> {product?.name}
+              <span className="font-semibold">Name:</span> {product?.NAME}
             </p>
             <p>
-              <span className="font-semibold">Price:</span> ₹{product?.final_price}
+              <span className="font-semibold">Price:</span> ₹
+              {product?.FINAL_PRICE}
             </p>
             <p>
-              <span className="font-semibold">Quantity:</span> {product?.quantity}
+              <span className="font-semibold">Quantity:</span>{" "}
+              {product?.QUANTITY}
             </p>
             <p className="font-bold text-pink-600 dark:text-yellow-400">
               Total: ₹
               {(
-                parseFloat(product?.final_price || 0) * (product?.quantity || 1) +
-                parseFloat(product?.shipping_cost || 0)
+                parseFloat(product?.FINAL_PRICE || 0) *
+                  (product?.QUANTITY || 1) +
+                parseFloat(product?.SHIPPING_COST || 0)
               ).toFixed(2)}
             </p>
           </div>

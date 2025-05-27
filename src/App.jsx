@@ -59,8 +59,8 @@ function WishlistInit() {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (user && user.id) {
-      fetchWishlist(user.id);
+    if (user && user.ID) {
+      fetchWishlist(user.ID);
     }
   }, []);
 

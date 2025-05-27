@@ -66,7 +66,7 @@ const OrderSuccessPage = () => {
       </section>
     );
   }
-
+  console.log("orderData", orderData.items);
   const formattedDate = new Date().toLocaleDateString();
   const deliveryDate = new Date(
     Date.now() + 5 * 24 * 60 * 60 * 1000
@@ -204,6 +204,7 @@ const OrderSuccessPage = () => {
                 const price = parseFloat(item.price);
                 const totalPrice = (price * item.quantity).toFixed(2);
                 const product = productDetails[item.product_id];
+                console.log("product", product);
 
                 return (
                   <li
@@ -213,20 +214,20 @@ const OrderSuccessPage = () => {
                     {/* Left Side: Image and Product Info */}
                     <div className="flex items-start gap-4">
                       <img
-                        src={product?.image_url}
+                        src={product?.IMAGE_URL}
                         alt={item.name}
                         className="w-20 h-20 object-cover rounded-lg border border-gray-300 dark:border-gray-600"
                       />
                       <div className="space-y-1">
                         <h3 className="text-base font-semibold text-pink-700 dark:text-yellow-300">
-                          {product?.name || `Product ID: ${item.product_id}`}
+                          {product?.NAME || `Product ID: ${item.product_id}`}
                         </h3>
                         <p className="text-sm text-gray-600 dark:text-gray-400">
                           Qty: {item.quantity} × ₹{price.toFixed(2)}
                         </p>
                         {product?.description && (
                           <p className="text-sm text-gray-500 dark:text-gray-300">
-                            {product.description}
+                            {product.DESCRIPTION}
                           </p>
                         )}
                       </div>

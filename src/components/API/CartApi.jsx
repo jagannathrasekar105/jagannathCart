@@ -3,6 +3,7 @@ const BASE_URL = `${import.meta.env.VITE_API_URL}/api/cart`;
 export const fetchCartItemsApi = async (userId) => {
   const res = await fetch(`${BASE_URL}/${userId}`);
   if (!res.ok) throw new Error("Failed to fetch cart items");
+
   return await res.json();
 };
 

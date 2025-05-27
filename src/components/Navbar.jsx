@@ -50,15 +50,15 @@ function Navbar() {
     setDropdownOpen(false);
   };
 
-  const profileIcon = user?.profilePic ? (
+  const profileIcon = user?.PROFILEPIC ? (
     <img
-      src={`data:image/jpeg;base64,${user.profilePic}`}
+      src={`data:image/jpeg;base64,${user.PROFILEPIC}`}
       alt="profile"
       className="w-full h-full object-cover rounded-full"
     />
   ) : (
     <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-pink-500 to-yellow-500 text-white text-xl font-bold">
-      {user?.username?.charAt(0).toUpperCase()}
+      {user?.USERNAME?.charAt(0).toUpperCase()}
     </div>
   );
 
@@ -115,7 +115,7 @@ function Navbar() {
           {/* Auth Section */}
           {user ? (
             <div className="flex items-center gap-4">
-              <span className="font-semibold">👋 {user.username}</span>
+              <span className="font-semibold">👋 {user.USERNAME}</span>
 
               {/* Dropdown */}
               <DropdownMenu.Root
@@ -136,7 +136,7 @@ function Navbar() {
                     <DropdownMenu.Label className="text-sm text-white mb-2">
                       Hello,{" "}
                       <span className="font-semibold capitalize">
-                        {user.username}
+                        {user.USERNAME}
                       </span>
                     </DropdownMenu.Label>
 
@@ -161,7 +161,7 @@ function Navbar() {
                     />
                     <DropdownItem
                       label={
-                        user.profilePic
+                        user.PROFILEPIC
                           ? "Edit Profile Picture"
                           : "Upload Profile Picture"
                       }

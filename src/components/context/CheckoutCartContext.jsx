@@ -5,20 +5,23 @@ const CheckoutCartContext = createContext();
 export const CheckoutCartProvider = ({ children }) => {
   const [buyProduct, setBuyProduct] = useState([]);
   const removeFromBuyProduct = (id) => {
-    setBuyProduct((prev) => prev.filter((item) => item.id !== id));
+    setBuyProduct((prev) => prev.filter((item) => item.ID !== id));
   };
-  const updateBuyProductQuantity = (productId, quantity) => {
+  const updateBuyProductQuantity = (productId, QUANTITY) => {
     setBuyProduct((prev) =>
-      prev.map((item) => (item.id === productId ? { ...item, quantity } : item))
+      prev.map((item) => (item.ID === productId ? { ...item, QUANTITY } : item))
     );
   };
+
+  console.log("buyProduct", buyProduct);
+
   const totalAmount = useMemo(() => {
     return buyProduct.reduce(
-      (total, { final_price, quantity, shipping_cost }) => {
-        const price = parseFloat(final_price);
-        const qty = parseInt(quantity);
-        const shipping = parseFloat(shipping_cost);
-        return total + price * qty + shipping;
+      (TOTAL, { FINAL_PRICE, QUANTITY, SHIPPING_COST }) => {
+        const price = parseFloat(FINAL_PRICE);
+        const qty = parseInt(QUANTITY);
+        const shipping = parseFloat(SHIPPING_COST);
+        return TOTAL + price * qty + shipping;
       },
       0
     );

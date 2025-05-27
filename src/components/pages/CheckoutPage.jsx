@@ -21,7 +21,7 @@ export default function CheckoutPage() {
   }, []);
 
   const confirmRemove = useCallback(() => {
-    const productId = modalState.product?.id;
+    const productId = modalState.product?.ID;
     if (productId) {
       removeFromBuyProduct(productId);
     }
@@ -52,12 +52,12 @@ export default function CheckoutPage() {
           <div className="space-y-6 max-h-80 overflow-y-auto p-2 overflow-x-hidden scrollbar-thin scrollbar-thumb-pink-500 scrollbar-track-pink-100 dark:scrollbar-thumb-yellow-400 dark:scrollbar-track-gray-700">
             {buyProduct.map((item) => {
               const total = (
-                parseFloat(item.FINAL_PRICE) * item.quantity +
+                parseFloat(item.FINAL_PRICE) * item.QUANTITY +
                 parseFloat(item.SHIPPING_COST)
               ).toFixed(2);
               return (
                 <div
-                  key={item.cartItemId || item.ID}
+                  key={item.CARTITEMID || item.ID}
                   className="relative border border-pink-200 dark:border-yellow-500 rounded-xl p-6 bg-pink-50/60 dark:bg-gray-800 shadow-md transform transition-transform hover:scale-[1.01]"
                 >
                   <button
@@ -114,8 +114,8 @@ export default function CheckoutPage() {
                             <button
                               onClick={() =>
                                 handleQuantityChange(
-                                  item.id,
-                                  item.quantity,
+                                  item.ID,
+                                  item.QUANTITY,
                                   "dec"
                                 )
                               }
@@ -124,13 +124,13 @@ export default function CheckoutPage() {
                               <Minus size={18} />
                             </button>
                             <span className="min-w-[20px] text-center">
-                              {item.quantity}
+                              {item.QUANTITY}
                             </span>
                             <button
                               onClick={() =>
                                 handleQuantityChange(
-                                  item.id,
-                                  item.quantity,
+                                  item.ID,
+                                  item.QUANTITY,
                                   "inc"
                                 )
                               }

@@ -22,7 +22,7 @@ const ViewProductModal = ({
   if (!product) return null;
 
   const isWishlisted = wishlistIds?.includes?.(product.ID);
-  const inStock = product.stock_quantity > 0;
+  const inStock = product.STOCK_QUANTITY > 0;
 
   return (
     <div className="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center z-50 p-4 animate-fadeIn">

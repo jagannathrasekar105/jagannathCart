@@ -15,7 +15,7 @@ export const CartProvider = ({ children }) => {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (user?.id) {
+    if (user?.ID) {
       fetchCartItems();
     } else {
       setCartItems([]);
@@ -23,10 +23,10 @@ export const CartProvider = ({ children }) => {
   }, [user]);
 
   const fetchCartItems = async () => {
-    if (!user?.id) return;
+    if (!user?.ID) return;
 
     try {
-      const data = await fetchCartItemsApi(user.id);
+      const data = await fetchCartItemsApi(user.ID);
       setCartItems(data);
     } catch (error) {
       console.error("Failed to fetch cart items:", error);
@@ -34,12 +34,12 @@ export const CartProvider = ({ children }) => {
   };
 
   const addToCart = async (productId, quantity = 1) => {
-    if (!user?.id) {
+    if (!user?.ID) {
       showErrorToast("Please login to add items to cart");
       return { success: false, data: { error: "Not logged in" } };
     }
 
-    const isAlreadyInCart = cartItems.some((item) => item.id === productId);
+    const isAlreadyInCart = cartItems.some((item) => item.ID === productId);
     if (isAlreadyInCart) {
       showErrorToast("🛒 Product already in cart");
       return { success: false, data: { error: "Already in cart" } };
@@ -47,7 +47,7 @@ export const CartProvider = ({ children }) => {
 
     try {
       const { success, data } = await addToCartApi(
-        user.id,
+        user.ID,
         productId,
         quantity
       );
@@ -63,10 +63,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const updateCartQuantity = async (productId, quantity) => {
-    if (!user?.id) return;
+    if (!user?.ID) return;
 
     try {
-      const success = await updateCartApi(user.id, productId, quantity);
+      const success = await updateCartApi(user.ID, productId, quantity);
       if (success) {
         await fetchCartItems();
         showSuccessToast("Cart quantity updated successfully");
@@ -80,10 +80,10 @@ export const CartProvider = ({ children }) => {
   };
 
   const removeFromCart = async (productId) => {
-    if (!user?.id) return;
+    if (!user?.ID) return;
 
     try {
-      const success = await removeFromCartApi(user.id, productId);
+      const success = await removeFromCartApi(user.ID, productId);
       if (success) {
         await fetchCartItems();
         showSuccessToast("Item removed from cart");

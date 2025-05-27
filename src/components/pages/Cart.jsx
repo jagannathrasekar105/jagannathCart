@@ -16,18 +16,18 @@ export default function Cart() {
 
   const handleQuantityChange = async (index, change) => {
     const item = cartItems[index];
-    const newQty = item.quantity + change;
+    const newQty = item.QUANTITY + change;
     if (newQty >= 1) await updateCartQuantity(item.ID, newQty);
   };
   const handleRemove = async (productId) => {
     await removeFromCart(productId);
-    setSelectedItems((prev) => prev.filter((id) => ID !== productId));
+    setSelectedItems((prev) => prev.filter((id) => id !== productId));
   };
 
   const handleSelectItem = (itemId) => {
     setSelectedItems((prev) =>
       prev.includes(itemId)
-        ? prev.filter((id) => ID !== itemId)
+        ? prev.filter((id) => id !== itemId)
         : [...prev, itemId]
     );
   };
@@ -36,7 +36,7 @@ export default function Cart() {
     setSelectedItems(
       selectedItems.length === cartItems.length
         ? []
-        : cartItems.map((item) => item.id)
+        : cartItems.map((item) => item.ID)
     );
   };
 
@@ -49,11 +49,11 @@ export default function Cart() {
     setBuyProduct(selectedProducts);
     navigate("/checkout");
   };
-
+  console.log("cartItems", cartItems);
   const getTotalPrice = () =>
     cartItems
       .reduce(
-        (sum, item) => sum + Number(item.final_price || 0) * item.quantity,
+        (sum, item) => sum + Number(item.FINAL_PRICE || 0) * item.QUANTITY,
         0
       )
       .toFixed(2);
@@ -158,12 +158,12 @@ export default function Cart() {
                           : "text-pink-600 dark:text-yellow-400 hover:scale-110 transition"
                       }`}
                       onClick={() => handleQuantityChange(index, -1)}
-                      disabled={item.quantity === 1}
+                      disabled={item.QUANTITY === 1}
                     >
                       <Minus size={20} />
                     </button>
                     <span className="text-lg font-bold text-gray-800 dark:text-white">
-                      {item.quantity}
+                      {item.QUANTITY}
                     </span>
                     <button
                       title="Increase quantity"
@@ -176,7 +176,7 @@ export default function Cart() {
 
                   <div className="flex flex-col items-end gap-2 flex-1 text-right">
                     <p className="text-sm font-semibold text-green-600 dark:text-yellow-300">
-                      ₹{(item.FINAL_PRICE * item.quantity).toFixed(2)}
+                      ₹{(item.FINAL_PRICE * item.QUANTITY).toFixed(2)}
                     </p>
                     <button
                       className="text-sm text-red-500 dark:text-red-400 hover:underline"
