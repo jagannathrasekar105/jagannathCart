@@ -229,7 +229,7 @@ export default function ConfirmAndPayPage() {
           product={modalState.product}
           onCancel={() => setModalState({ show: false, product: null })}
           onConfirm={() => {
-            removeFromBuyProduct(modalState.product.id);
+            removeFromBuyProduct(modalState.product.ID);
             setModalState({ show: false, product: null });
           }}
         />

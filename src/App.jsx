@@ -116,7 +116,14 @@ function MainRoutes() {
       <Route path="/order" element={<YourOrderPage />} />
       <Route path="/history" element={<HistoryPage />} />
       <Route path="/order-success" element={<OrderSuccessPage />} />
-      <Route path="/profile" element={<ProfilePage />} />
+      <Route
+        path="/profile"
+        element={
+          <ProtectedRoute>
+            <ProfilePage />
+          </ProtectedRoute>
+        }
+      />
     </Routes>
   );
 }

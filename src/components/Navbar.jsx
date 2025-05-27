@@ -176,7 +176,7 @@ function Navbar() {
                       onChange={handleFileUpload}
                       className="hidden"
                     />
-                    {user.profilePic && (
+                    {user.PROFILEPIC && (
                       <DropdownItem
                         label="Remove Profile Picture"
                         icon={<Trash className="w-4 h-4" />}

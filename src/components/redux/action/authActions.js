@@ -94,14 +94,15 @@ export const login = ({ email, password }) => async (dispatch) => {
 export const uploadProfilePic = (file) => async (dispatch, getState) => {
     try {
         const token = localStorage.getItem("token");
-        const { ok, data } = await uploadProfilePicture(file, token);
+        const user = JSON.parse(localStorage.getItem("user"));
+        const { ok, data } = await uploadProfilePicture(file, token, user.ID);
 
         if (!ok) {
             throw new Error(data.error || "Profile picture upload failed");
         }
 
         const currentUser = getState().auth.user;
-        const updatedUser = { ...currentUser, profilePic: data.base64Image };
+        const updatedUser = { ...currentUser, PROFILEPIC: data.base64Image };
 
         localStorage.setItem("user", JSON.stringify(updatedUser)); // Update localStorage
 
@@ -122,12 +123,13 @@ export const uploadProfilePic = (file) => async (dispatch, getState) => {
 export const removeProfilePic = () => async (dispatch, getState) => {
     try {
         const token = localStorage.getItem("token");
-        const { ok, data } = await removeProfilePicture(token);
+        const user = JSON.parse(localStorage.getItem("user"));
+        const { ok, data } = await removeProfilePicture(token, user.ID);
 
         if (!ok) throw new Error(data.error || "Failed to remove profile picture");
 
         const currentUser = getState().auth.user;
-        const updatedUser = { ...currentUser, profilePic: null };
+        const updatedUser = { ...currentUser, PROFILEPIC: null };
 
         localStorage.setItem("user", JSON.stringify(updatedUser)); // Update localStorage
 

@@ -9,12 +9,12 @@ export default function YourOrderPage() {
   const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    if (!user || !user.id) return;
+    if (!user || !user.ID) return;
 
     const fetchOrders = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/orders/${user.id}`
+          `${import.meta.env.VITE_API_URL}/api/orders/${user.ID}`
         );
         const data = await response.json();
 

@@ -13,8 +13,6 @@ export const CheckoutCartProvider = ({ children }) => {
     );
   };
 
-  console.log("buyProduct", buyProduct);
-
   const totalAmount = useMemo(() => {
     return buyProduct.reduce(
       (TOTAL, { FINAL_PRICE, QUANTITY, SHIPPING_COST }) => {

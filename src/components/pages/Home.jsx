@@ -48,8 +48,8 @@ function Home() {
     } else {
       const filtered = products.filter((product) => {
         return (
-          selectedFilters.includes(product.category_id.toString()) ||
-          selectedFilters.includes(product.id.toString())
+          selectedFilters.includes(product.CATEGORY_ID.toString()) ||
+          selectedFilters.includes(product.ID.toString())
         );
       });
       setFilteredProducts(filtered);

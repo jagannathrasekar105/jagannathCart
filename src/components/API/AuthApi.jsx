@@ -1,3 +1,5 @@
+import { useSelector } from "react-redux";
+
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/auth`;
 
 export const registerUser = async (userData) => {
@@ -22,12 +24,12 @@ export const loginUser = async (email, password) => {
   return { ok: res.ok, data };
 };
 
-export const uploadProfilePicture = async (file, token) => {
+export const uploadProfilePicture = async (file, token, id) => {
   // const token = localStorage.getItem("token");
   const formData = new FormData();
   formData.append("profilePic", file);
 
-  const res = await fetch(`${BASE_URL}/upload-profile-pic`, {
+  const res = await fetch(`${BASE_URL}/${id}/upload-profile-pic`, {
     method: "POST",
     headers: {
       Authorization: `Bearer ${token}`,
@@ -39,8 +41,8 @@ export const uploadProfilePicture = async (file, token) => {
   return { ok: res.ok, data };
 };
 
-export const removeProfilePicture = async (token) => {
-  const res = await fetch(`${BASE_URL}/reomve-profile-pic`, {
+export const removeProfilePicture = async (token, id) => {
+  const res = await fetch(`${BASE_URL}/${id}/remove-profile-pic`, {
     method: "DELETE",
     headers: {
       Authorization: `Bearer ${token}`,

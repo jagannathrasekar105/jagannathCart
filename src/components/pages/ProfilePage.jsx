@@ -26,15 +26,15 @@ const ProfilePage = () => {
       <div className="flex flex-col items-center space-y-4">
         {/* Profile Picture */}
         <div className="w-32 h-32 rounded-full bg-gray-200 dark:bg-gray-700 overflow-hidden">
-          {user.profilePic ? (
+          {user.PROFILEPIC ? (
             <img
-              src={`data:image/jpeg;base64,${user.profilePic}`}
+              src={`data:image/jpeg;base64,${user.PROFILEPIC}`}
               alt="profile"
               className="w-full h-full object-cover rounded-full"
             />
           ) : (
             <div className="w-full h-full flex items-center justify-center bg-gradient-to-r from-pink-500 to-yellow-500 text-white text-5xl font-bold">
-              {user?.username?.charAt(0).toUpperCase()}
+              {user?.USERNAME?.charAt(0).toUpperCase()}
             </div>
           )}
         </div>
@@ -50,17 +50,17 @@ const ProfilePage = () => {
         {/* User Info */}
         <div className="text-center space-y-1 text-gray-800 dark:text-gray-200">
           <p>
-            <strong>Name:</strong> {user.firstName} {user.lastName}
+            <strong>Name:</strong> {user.FIRSTNAME} {user.LASTNAME}
           </p>
           <p>
-            <strong>Username:</strong> {user.username}
+            <strong>Username:</strong> {user.USERNAME}
           </p>
           <p>
-            <strong>Email:</strong> {user.email}
+            <strong>Email:</strong> {user.EMAIL}
           </p>
           <p>
             <strong>Account Created:</strong>{" "}
-            {new Date(user.createdAt).toLocaleDateString()}
+            {new Date(user.CREATED_AT).toLocaleDateString()}
           </p>
         </div>
 

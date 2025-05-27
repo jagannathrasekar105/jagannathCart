@@ -44,7 +44,7 @@ const OrderSuccessPage = () => {
         );
 
         const productMap = responses.reduce((acc, product) => {
-          acc[product.id] = product;
+          acc[product.ID] = product;
           return acc;
         }, {});
 
@@ -66,7 +66,7 @@ const OrderSuccessPage = () => {
       </section>
     );
   }
-  console.log("orderData", orderData.items);
+
   const formattedDate = new Date().toLocaleDateString();
   const deliveryDate = new Date(
     Date.now() + 5 * 24 * 60 * 60 * 1000
@@ -204,7 +204,6 @@ const OrderSuccessPage = () => {
                 const price = parseFloat(item.price);
                 const totalPrice = (price * item.quantity).toFixed(2);
                 const product = productDetails[item.product_id];
-                console.log("product", product);
 
                 return (
                   <li
