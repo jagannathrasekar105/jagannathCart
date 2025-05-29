@@ -162,7 +162,7 @@ function Navbar() {
                     <DropdownItem
                       label={
                         user.PROFILEPIC
-                          ? "Edit Profile Picture"
+                          ? "Change Profile Picture"
                           : "Upload Profile Picture"
                       }
                       icon={<Edit className="w-4 h-4" />}
