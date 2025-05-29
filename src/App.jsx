@@ -22,12 +22,9 @@ import YourOrderPage from "./components/pages/YourOrderPage";
 import HistoryPage from "./components/pages/HistoryPage";
 import OrderSuccessPage from "./components/pages/OrderSuccessPage";
 import ProfilePage from "./components/pages/ProfilePage";
-import {
-  WishlistProvider,
-  useWishlist,
-} from "./components/context/WishlistContext";
+import { WishlistProvider } from "./components/context/WishlistContext";
 import { useDispatch, useSelector } from "react-redux";
-import { authLogin } from "./components/redux/action/authActions";
+import { fetchCurrentUser } from "./components/redux/action/authActions";
 
 function App() {
   return (
@@ -36,13 +33,12 @@ function App() {
         <CartProvider>
           <CheckoutCartProvider>
             <WishlistProvider>
-              <WishlistInit />
               <Navbar />
               <Toaster
                 position="top-right"
                 reverseOrder={false}
                 toastOptions={{
-                  duration: 1100,
+                  duration: 1000,
                 }}
               />
               <MainRoutes />
@@ -54,34 +50,39 @@ function App() {
   );
 }
 
-function WishlistInit() {
-  const { fetchWishlist } = useWishlist();
-
-  useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    if (user && user.ID) {
-      fetchWishlist(user.ID);
-    }
-  }, []);
-
-  return null;
-}
-
 function MainRoutes() {
+  const { user, loading } = useSelector((state) => state.auth);
+  const isAuthenticated = () => !!user;
   const dispatch = useDispatch();
-  const { user } = useSelector((state) => state.auth);
-  const isAuthenticated = useMemo(() => !!user, [user]);
   useEffect(() => {
-    const token = localStorage.getItem("token");
-    if (token) {
-      dispatch(authLogin(user, token));
-    }
-  }, [dispatch]);
-
+    dispatch(fetchCurrentUser());
+  }, []);
+  if (loading)
+    return (
+      <div className="flex items-center justify-center h-full w-full">
+        <div className="w-10 h-10 border-4 border-blue-500 border-t-transparent rounded-full animate-spin" />
+      </div>
+    );
   return (
     <Routes>
-      <Route path="/" element={isAuthenticated ? <Home /> : <WelcomePage />} />
-      <Route path="/shop" element={<Shop />} />
+      <Route
+        path="/"
+        element={isAuthenticated() ? <Home /> : <WelcomePage />}
+      />
+      <Route path="/about" element={<About />} />
+      <Route path="/contact" element={<Contact />} />
+      <Route path="/login" element={<Login />} />
+      <Route path="/register" element={<Register />} />
+
+      <Route
+        path="/shop"
+        element={
+          <ProtectedRoute>
+            <Shop />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/cart"
         element={
@@ -98,10 +99,6 @@ function MainRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="/about" element={<About />} />
-      <Route path="/contact" element={<Contact />} />
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
 
       <Route
         path="/product"
@@ -111,11 +108,51 @@ function MainRoutes() {
           </ProtectedRoute>
         }
       />
-      <Route path="/checkout" element={<CheckoutPage />} />
-      <Route path="/confirmAndPay" element={<ConfirmAndPayPage />} />
-      <Route path="/order" element={<YourOrderPage />} />
-      <Route path="/history" element={<HistoryPage />} />
-      <Route path="/order-success" element={<OrderSuccessPage />} />
+      <Route
+        path="/checkout"
+        element={
+          <ProtectedRoute>
+            <CheckoutPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/confirmAndPay"
+        element={
+          <ProtectedRoute>
+            <ConfirmAndPayPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/order"
+        element={
+          <ProtectedRoute>
+            <YourOrderPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/history"
+        element={
+          <ProtectedRoute>
+            <HistoryPage />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/order-success"
+        element={
+          <ProtectedRoute>
+            <OrderSuccessPage />
+          </ProtectedRoute>
+        }
+      />
+
       <Route
         path="/profile"
         element={

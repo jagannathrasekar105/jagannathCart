@@ -49,7 +49,7 @@ export default function Cart() {
     setBuyProduct(selectedProducts);
     navigate("/checkout");
   };
-  console.log("cartItems", cartItems);
+
   const getTotalPrice = () =>
     cartItems
       .reduce(

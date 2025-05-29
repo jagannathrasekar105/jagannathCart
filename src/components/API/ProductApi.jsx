@@ -1,7 +1,10 @@
 const BASE_URL = `${import.meta.env.VITE_API_URL}/api/products`;
+
 export const fetchTopSellingProducts = async () => {
   try {
-    const res = await fetch(`${BASE_URL}/top-selling`);
+    const res = await fetch(`${BASE_URL}/top-selling`, {
+      credentials: "include", // Include cookies
+    });
     if (!res.ok) throw new Error("Failed to fetch products");
     return await res.json();
   } catch (err) {
@@ -9,9 +12,12 @@ export const fetchTopSellingProducts = async () => {
     return [];
   }
 };
+
 export const fetchProductWithCategories = async () => {
   try {
-    const res = await fetch(`${BASE_URL}/products-with-categories`);
+    const res = await fetch(`${BASE_URL}/products-with-categories`, {
+      credentials: "include", // Include cookies
+    });
     if (!res.ok) throw new Error("Failed to fetch products");
     return await res.json();
   } catch (err) {

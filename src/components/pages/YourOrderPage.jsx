@@ -14,8 +14,12 @@ export default function YourOrderPage() {
     const fetchOrders = async () => {
       try {
         const response = await fetch(
-          `${import.meta.env.VITE_API_URL}/api/orders/${user.ID}`
+          `${import.meta.env.VITE_API_URL}/api/orders/${user.ID}`,
+          {
+            credentials: "include",
+          }
         );
+
         const data = await response.json();
 
         // Sort by order_date descending

@@ -4,7 +4,7 @@ import { X, Plus, Minus } from "lucide-react";
 import RemoveProductModal from "./RemoveProductModal";
 import { useCheckoutCart } from "../context/CheckoutCartContext";
 import OrderSuccessPage from "./OrderSuccessPage";
-import { showErrorToast } from "../../utils/toastUtils";
+import { showErrorToast, showSuccessToast } from "../../utils/toastUtils";
 import { placeOrder } from "../API/OrderApi";
 import { useSelector } from "react-redux";
 
@@ -74,7 +74,7 @@ export default function ConfirmAndPayPage() {
     if (!agree) {
       return showErrorToast("⚠️ Please agree to the terms and conditions.");
     }
-    console.log("buyProduct", buyProduct);
+
     const orderData = {
       user_id: user.ID,
       total_amount: totalAmount.toFixed(2),
@@ -90,9 +90,10 @@ export default function ConfirmAndPayPage() {
         price: FINAL_PRICE,
       })),
     };
-    console.log("orderData", orderData);
+
     try {
       const result = await placeOrder(orderData);
+      showSuccessToast(result.message);
       navigate("/order-success", { state: { orderData } });
     } catch (err) {
       console.log(err);

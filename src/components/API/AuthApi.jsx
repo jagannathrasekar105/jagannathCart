@@ -18,35 +18,32 @@ export const loginUser = async (email, password) => {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ email, password }),
+    credentials: "include",
   });
 
   const data = await res.json();
+
   return { ok: res.ok, data };
 };
 
-export const uploadProfilePicture = async (file, token, id) => {
-  // const token = localStorage.getItem("token");
+export const uploadProfilePicture = async (file, id) => {
   const formData = new FormData();
   formData.append("profilePic", file);
 
   const res = await fetch(`${BASE_URL}/${id}/upload-profile-pic`, {
     method: "POST",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
     body: formData,
+    credentials: "include",
   });
 
   const data = await res.json();
   return { ok: res.ok, data };
 };
 
-export const removeProfilePicture = async (token, id) => {
+export const removeProfilePicture = async (id) => {
   const res = await fetch(`${BASE_URL}/${id}/remove-profile-pic`, {
     method: "DELETE",
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
+    credentials: "include",
   });
 
   const data = await res.json();

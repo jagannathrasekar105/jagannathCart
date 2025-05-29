@@ -133,7 +133,7 @@ function Home() {
                 <button
                   className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 dark:bg-yellow-500 dark:hover:bg-yellow-400 dark:text-black transition whitespace-nowrap"
                   onClick={() => {
-                    setBuyProduct([{ ...product, quantity: 1 }]);
+                    setBuyProduct([{ ...product, QUANTITY: 1 }]);
                     navigate("/checkout");
                   }}
                 >

@@ -2,13 +2,15 @@ import { useSelector } from "react-redux";
 import { Navigate } from "react-router-dom";
 
 export default function ProtectedRoute({ children }) {
-  const { token } = useSelector((state) => state.auth);
+  const { user, isInitialized } = useSelector((state) => state.auth);
 
-  // ❌ Not logged in? Redirect to login
-  if (!token) {
-    return <Navigate to="/login" replace />;
+  if (!isInitialized) {
+    return <div>Loading...</div>; // or a spinner
   }
 
-  // ✅ Authenticated, render children
+  if (!user) {
+    return <Navigate to="/login" />;
+  }
+
   return children;
 }
