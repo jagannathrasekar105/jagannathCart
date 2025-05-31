@@ -60,9 +60,7 @@ export const fetchCurrentUser = () => async (dispatch) => {
             dispatch(authLogout());
             return;
         }
-        console.log("data", data)
 
-        console.log("data.user", data.user);
         dispatch(authLogin(data.user));
         // dispatch(authLoading_false())
     } catch (error) {
