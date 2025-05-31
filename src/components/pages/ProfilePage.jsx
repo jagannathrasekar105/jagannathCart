@@ -3,6 +3,7 @@ import { useSelector } from "react-redux";
 
 const ProfilePage = () => {
   const { user } = useSelector((state) => state.auth);
+  
 
   if (!user) {
     return (

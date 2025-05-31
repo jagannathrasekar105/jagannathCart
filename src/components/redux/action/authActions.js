@@ -74,7 +74,7 @@ export const fetchCurrentUser = () => async (dispatch) => {
 
 // Register action
 export const register = ({ firstName, lastName, email, username, password }) => async (dispatch) => {
-    dispatch(authLoading());
+
 
     try {
         const { ok, data } = await registerUser({ firstName, lastName, email, username, password });
@@ -96,7 +96,7 @@ export const register = ({ firstName, lastName, email, username, password }) => 
 
 // Login action (No localStorage)
 export const login = ({ email, password }) => async (dispatch) => {
-    dispatch(authLoading());
+
 
     try {
         const { ok, data } = await loginUser(email, password);
