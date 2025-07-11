@@ -29,7 +29,7 @@ export const uploadProfilePicture = async (file, token) => {
   const res = await fetch(`${BASE_URL}/upload-profile-pic`, {
     method: "POST",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: token,
     },
     body: formData,
   });
@@ -39,10 +39,10 @@ export const uploadProfilePicture = async (file, token) => {
 };
 
 export const removeProfilePicture = async (token) => {
-  const res = await fetch(`${BASE_URL}/reomve-profile-pic`, {
+  const res = await fetch(`${BASE_URL}/remove-profile-pic`, {
     method: "DELETE",
     headers: {
-      Authorization: `Bearer ${token}`,
+      Authorization: token,
     },
   });
 

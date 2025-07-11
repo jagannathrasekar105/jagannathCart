@@ -19,7 +19,7 @@ export default function YourOrderPage() {
         const data = await response.json();
 
         // Sort by order_date descending
-        const sortedOrders = data.sort(
+        const sortedOrders = data.orderDetails.sort(
           (a, b) => new Date(b.order_date) - new Date(a.order_date)
         );
 

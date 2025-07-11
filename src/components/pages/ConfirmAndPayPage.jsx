@@ -77,7 +77,7 @@ export default function ConfirmAndPayPage() {
 
     const orderData = {
       user_id: user.id,
-      total_amount: totalAmount.toFixed(2),
+      total_amount: parseFloat(totalAmount),
       name,
       mobile,
       address,
